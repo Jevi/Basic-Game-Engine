@@ -7,12 +7,10 @@ public abstract class Component {
 
 	protected Entity entity;
 	private String id;
-	private ComponentType type;
 	private boolean enabled = false;
 
-	public Component(String id, boolean enabled, ComponentType type) {
+	public Component(String id, boolean enabled) {
 		this.id = id;
-		this.type = type;
 		this.enabled = enabled;
 	}
 
@@ -32,10 +30,6 @@ public abstract class Component {
 
 	public boolean isEnabled() {
 		return enabled;
-	}
-
-	public ComponentType getType() {
-		return type;
 	}
 
 	public Entity getEntity() {

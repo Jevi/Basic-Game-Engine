@@ -29,7 +29,7 @@ public abstract class GameState {
 		this.stateBasedGame = stateBasedGame;
 
 		for (Entity entity : entities) {
-			entity.init();
+			entity.init(this.gameContainer);
 		}
 	}
 

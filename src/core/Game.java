@@ -1,6 +1,5 @@
 package core;
 
-import junit.framework.Assert;
 
 public abstract class Game {
 
@@ -12,11 +11,7 @@ public abstract class Game {
 		this.title = title;
 	}
 
-	public void init(GameContainer gameContainer) {
-		Assert.assertNotNull(gameContainer);
-
-		this.gameContainer = gameContainer;
-	}
+	public abstract void init(GameContainer gameContainer);
 
 	public abstract void destroy();
 

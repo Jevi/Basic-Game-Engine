@@ -1,32 +1,35 @@
 package core;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import junit.framework.Assert;
 
 import component.Component;
-import component.ComponentType;
 
-public class Entity {
+public abstract class Entity {
 
 	private String id;
+	protected GameContainer gameContainer;
 	private Set<Component> components = new HashSet<Component>();
-	private Map<ComponentType, Component> componentTypeToComponentMap = new HashMap<ComponentType, Component>();
 
 	public Entity(String id) {
 		this.id = id;
 	}
 
-	public void init() {
+	public void init(GameContainer gameContainer) {
+		Assert.assertNotNull(gameContainer);
+		this.gameContainer = gameContainer;
+
+		createComponents();
 		for (Component component : components) {
 			if (component.isEnabled()) {
 				component.init(this);
 			}
 		}
 	}
+
+	protected abstract void createComponents();
 
 	public void destroy() {
 		for (Component component : components) {
@@ -46,10 +49,6 @@ public class Entity {
 		return id;
 	}
 
-	public Set<ComponentType> getComponentTypes() {
-		return componentTypeToComponentMap.keySet();
-	}
-
 	public Component getComponent(String id) {
 		for (Component component : components) {
 			if (component.getId().equals(id)) {
@@ -66,27 +65,18 @@ public class Entity {
 		return components.toArray(new Component[components.size()])[index];
 	}
 
-	public Component getComponent(ComponentType type) {
-		return componentTypeToComponentMap.get(type);
-	}
-
 	public Set<Component> getComponents() {
 		return components;
 	}
 
 	public boolean addComponent(Component newComponent) {
-		if (components.add(newComponent)) {
-			componentTypeToComponentMap.put(newComponent.getType(), newComponent);
-			return true;
-		}
-		return false;
+		return components.add(newComponent);
 	}
 
 	public boolean removeComponent(String id) {
 		for (Component component : components) {
 			if (component.getId().equals(id)) {
 				components.remove(component);
-				componentTypeToComponentMap.remove(component.getType());
 				return true;
 			}
 		}
@@ -97,11 +87,10 @@ public class Entity {
 		Assert.assertTrue(index >= 0);
 		Assert.assertTrue(index < components.size());
 
-		Component component = getComponent(index);
-		if (components.remove(component)) {
-			componentTypeToComponentMap.remove(component.getType());
-			return true;
-		}
-		return false;
+		return components.remove(getComponent(index));
+	}
+
+	public void removeAllComponents() {
+		components = new HashSet<Component>();
 	}
 }

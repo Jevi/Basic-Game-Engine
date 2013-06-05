@@ -14,8 +14,10 @@ public class StateBasedGameImpl extends StateBasedGame {
 
 	@Override
 	public void initGameStates() {
-		GameState gameState = new GameStateImpl(0, 0, -9.8f);
+		GameState gameState = new StateOne(0, 0, -9.8f);
+		GameState gameState2 = new StateTwo(1, 0, -9.8f);
 		this.addGameState(gameState);
+		this.addGameState(gameState2);
 		this.enterGameState(gameState.getID());
 	}
 

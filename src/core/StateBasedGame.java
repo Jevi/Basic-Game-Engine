@@ -22,7 +22,7 @@ public abstract class StateBasedGame extends Game {
 
 	@Override
 	public void init(GameContainer gameContainer) {
-		super.init(gameContainer);
+		this.gameContainer = gameContainer;
 		initGameStates();
 	}
 
@@ -92,5 +92,6 @@ public abstract class StateBasedGame extends Game {
 		gameState.destroy();
 		gameState = idToGameStateMap.get(id);
 		gameState.init(gameContainer, this);
+		System.out.println("LOADED STATE ID: " + id);
 	}
 }
