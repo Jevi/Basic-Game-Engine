@@ -18,4 +18,10 @@ public class Graphics {
 		}
 		vao.unbind();
 	}
+
+	public static void drawVAO(VAO vao, ShaderProgram shaderProgram) {
+		shaderProgram.bind();
+		drawVAO(vao);
+		shaderProgram.unbind();
+	}
 }
