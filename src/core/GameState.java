@@ -5,20 +5,15 @@ import java.util.Set;
 
 import junit.framework.Assert;
 
-import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.World;
-
 public abstract class GameState {
 
 	private int id;
-	protected World world;
 	protected GameContainer gameContainer;
 	protected StateBasedGame stateBasedGame;
 	protected Set<Entity> entities = new HashSet<Entity>();
 
-	public GameState(int id, float ygravity, float xgravity) {
+	public GameState(int id) {
 		this.id = id;
-		world = new World(new Vec2(ygravity, xgravity));
 	}
 
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame) {
@@ -40,8 +35,6 @@ public abstract class GameState {
 	}
 
 	public void update(int delta) {
-		world.step(1.0f / gameContainer.getFPS(), 8, 3);
-
 		for (Entity entity : entities) {
 			entity.update(delta);
 		}

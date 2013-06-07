@@ -1,8 +1,16 @@
 package test;
 
+import java.util.Arrays;
+
+import graphics.Graphics;
+import graphics.VAO;
+import graphics.VBO;
+import graphics.Vertex;
+
 import org.jbox2d.common.Vec2;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.*;
 
 import component.Component;
 
@@ -11,6 +19,7 @@ import core.Entity;
 public class EntityOne extends Entity {
 
 	private Vec2 position = new Vec2(0.0f, 0.0f);
+	private Vec2 dimensions = new Vec2(0.1f, 0.1f);
 
 	public EntityOne(String id) {
 		super(id);
@@ -20,7 +29,7 @@ public class EntityOne extends Entity {
 	protected void createComponents() {
 		// ----- Create Components -----
 
-		Component movementComponent = new Component("Movement Component", true) {
+		Component movementComponent = new Component("Movement", true) {
 			@Override
 			public void update(int delta) {
 				if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
@@ -43,26 +52,40 @@ public class EntityOne extends Entity {
 			}
 		};
 
-		Component renderComponent = new Component("Render Component", true) {
+		Component renderComponent = new Component("Render", true) {
+
+			VAO vao = new VAO();
+
+			public void init(Entity entity) {
+				super.init(entity);
+
+				Vertex[] verticies = new Vertex[4];
+				for (int i = 0; i < verticies.length; i++) {
+					verticies[i] = new Vertex();
+				}
+				verticies[0].setXY(-0.5f, 0.5f);
+				verticies[0].setRGB(1f, 0f, 0f);
+				verticies[1].setXY(0.5f, 0.5f);
+				verticies[2].setXY(0.5f, -0.5f);
+				verticies[3].setXY(-0.5f, -0.5f);
+
+				System.out.println(Arrays.toString(verticies));
+				VBO vbo = new VBO(verticies, GL_LINE_LOOP, GL_STATIC_DRAW);
+				vao.addVBO(vbo);
+			};
 
 			@Override
 			public void update(int delta) {
-				GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-				GL11.glBegin(GL11.GL_LINES);
-				{
-					GL11.glVertex2f(position.x, position.y);
-					GL11.glVertex2f(0.0f, 0.0f);
-				}
-				GL11.glEnd();
+				Graphics.drawVAO(vao);
 			}
 
 			@Override
 			public void destroy() {
+				vao.destroy();
 			}
 		};
 
 		// ----- Add Components -----
-
 		this.addComponent(movementComponent);
 		this.addComponent(renderComponent);
 	}

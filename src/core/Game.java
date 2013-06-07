@@ -1,6 +1,5 @@
 package core;
 
-
 public abstract class Game {
 
 	private String title;

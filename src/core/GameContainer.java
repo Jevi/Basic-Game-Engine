@@ -5,25 +5,21 @@ import junit.framework.Assert;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
+import static org.lwjgl.opengl.GL11.glViewport;
 
 public abstract class GameContainer {
 
 	private Game game;
-	private int width;
-	private int height;
+	protected GameContainerConfig gameContainerConfig;
+
 	private int fps = 0;
 	private long lastFPS = 0;
 	private long lastFrame = 0;
-	private int sync = -1;
 
-	public GameContainer(Game game, int width, int height) {
+	public GameContainer(Game game, GameContainerConfig gameContainerConfig) {
 		Assert.assertNotNull(game);
-		Assert.assertTrue(width > 0);
-		Assert.assertTrue(height > 0);
-
 		this.game = game;
-		this.width = width;
-		this.height = height;
+		this.gameContainerConfig = gameContainerConfig;
 	}
 
 	protected void init() throws LWJGLException {
@@ -38,8 +34,15 @@ public abstract class GameContainer {
 	protected void update(int delta) {
 		updateFPS();
 		game.update(delta);
+
 		Display.update();
-		Display.sync(sync);
+		Display.sync(gameContainerConfig.getSync());
+
+		if (Display.wasResized()) {
+			gameContainerConfig.setWidth(Display.getWidth());
+			gameContainerConfig.setHeight(Display.getHeight());
+			glViewport(0, 0, gameContainerConfig.getWidth(), gameContainerConfig.getHeight());
+		}
 	}
 
 	public long getTime() {
@@ -63,7 +66,7 @@ public abstract class GameContainer {
 	}
 
 	public void sync(int fps) {
-		sync = fps;
+		gameContainerConfig.setSync(fps);
 	}
 
 	public int getFPS() {
@@ -71,10 +74,10 @@ public abstract class GameContainer {
 	}
 
 	public int getWidth() {
-		return width;
+		return gameContainerConfig.getWidth();
 	}
 
 	public int getHeight() {
-		return height;
+		return gameContainerConfig.getHeight();
 	}
 }

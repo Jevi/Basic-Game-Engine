@@ -13,7 +13,7 @@ public abstract class StateBasedGame extends Game {
 	public StateBasedGame(String title) {
 		super(title);
 
-		gameState = new GameState(-1, 0, 0) {
+		gameState = new GameState(-1) {
 			@Override
 			public void render() {
 			}
