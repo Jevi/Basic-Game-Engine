@@ -1,6 +1,5 @@
 package test;
 
-import core.Entity;
 import core.GameContainer;
 import core.GameState;
 import core.StateBasedGame;
@@ -13,8 +12,8 @@ public class StateOne extends GameState {
 
 	@Override
 	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame) {
-		Entity test = new EntityOne("Test");
-		addEntity(test);
+		addEntity(new EntityOne("one"));
+		// addEntity(new EntityTwo("two"));
 
 		super.init(gameContainer, stateBasedGame);
 	}

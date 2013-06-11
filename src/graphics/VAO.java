@@ -46,8 +46,16 @@ public class VAO {
 
 		bind();
 		vbo.bind();
-		glVertexAttribPointer(vboVertexIndex, 4, GL_FLOAT, false, Vertex.sizeInBytes, 0);
-		glVertexAttribPointer(vboColorIndex, 4, GL_FLOAT, false, Vertex.sizeInBytes, Vertex.elementBytes * 4);
+		if (vbo.isTextured()) {
+			int vboTextureIndex = vboVertexIndex + 2;
+			glVertexAttribPointer(vboVertexIndex, TexturedVertex.positionElementCount, GL_FLOAT, false, TexturedVertex.stride, TexturedVertex.positionByteOffset);
+			glVertexAttribPointer(vboColorIndex, TexturedVertex.colorElementCount, GL_FLOAT, false, TexturedVertex.stride, TexturedVertex.colorByteOffset);
+			glVertexAttribPointer(vboTextureIndex, TexturedVertex.textureElementCount, GL_FLOAT, false, TexturedVertex.stride, TexturedVertex.textureByteOffset);
+		}
+		else {
+			glVertexAttribPointer(vboVertexIndex, Vertex.positionElementCount, GL_FLOAT, false, Vertex.sizeInBytes, 0);
+			glVertexAttribPointer(vboColorIndex, Vertex.colorElementCount, GL_FLOAT, false, Vertex.sizeInBytes, Vertex.elementBytes * 4);
+		}
 		vbo.unbind();
 		unbind();
 		return true;

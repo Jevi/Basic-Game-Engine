@@ -11,7 +11,7 @@ import org.lwjgl.BufferUtils;
 
 public class VBO {
 
-	private Vertex[] verticies;
+	private Vertex[] vertices;
 	private FloatBuffer vertexData;
 
 	private int id;
@@ -19,14 +19,63 @@ public class VBO {
 	private int mode;
 	private int usage;
 
+	private boolean isTextured = false;
+
 	public VBO(Vertex[] verticies, int mode, int usage) {
-		this.verticies = Arrays.copyOf(verticies, verticies.length);
+		this.vertices = Arrays.copyOf(verticies, verticies.length);
 		this.mode = mode;
 		this.usage = usage;
-		vertexData = BufferUtils.createFloatBuffer(this.verticies.length * Vertex.elementCount);
+		vertexData = BufferUtils.createFloatBuffer(verticies.length * Vertex.elementCount);
 
 		id = glGenBuffers();
-		updateData();
+		initData();
+	}
+
+	public VBO(TexturedVertex[] verticies, int mode, int usage) {
+		this.vertices = Arrays.copyOf(verticies, verticies.length);
+		this.mode = mode;
+		this.usage = usage;
+		isTextured = true;
+		vertexData = BufferUtils.createFloatBuffer(verticies.length * TexturedVertex.elementCount);
+
+		id = glGenBuffers();
+		initData();
+	}
+
+	private void initData() {
+		for (Vertex vertex : vertices) {
+			if (isTextured) {
+				TexturedVertex v = (TexturedVertex) vertex;
+				vertexData.put(v.getElements());
+			}
+			else {
+				vertexData.put(vertex.getXYZW());
+				vertexData.put(vertex.getRGBA());
+			}
+		}
+		vertexData.flip();
+
+		bind();
+		glBufferData(GL_ARRAY_BUFFER, vertexData, usage);
+		unbind();
+	}
+
+	private void updateData() {
+		for (Vertex vertex : vertices) {
+			if (isTextured) {
+				TexturedVertex v = (TexturedVertex) vertex;
+				vertexData.put(v.getElements());
+			}
+			else {
+				vertexData.put(vertex.getXYZW());
+				vertexData.put(vertex.getRGBA());
+			}
+		}
+		vertexData.flip();
+
+		bind();
+		glBufferSubData(GL_ARRAY_BUFFER, 0, vertexData);
+		unbind();
 	}
 
 	public void bind() {
@@ -37,30 +86,19 @@ public class VBO {
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	private void updateData() {
-		for (Vertex vertex : verticies) {
-			vertexData.put(vertex.getXYZW());
-			vertexData.put(vertex.getRGBA());
-		}
-		vertexData.flip();
-
-		bind();
-		glBufferData(GL_ARRAY_BUFFER, vertexData, usage);
-		unbind();
-	}
-
 	public void destroy() {
 		glDeleteBuffers(id);
-		verticies = null;
+		vertices = null;
+		vertexData = null;
 	}
 
-	public Vertex[] getVerticies() {
-		return Arrays.copyOf(verticies, verticies.length);
+	public Vertex[] getVertices() {
+		return Arrays.copyOf(vertices, vertices.length);
 	}
 
 	public void setVerticies(Vertex[] verticies) {
-		Assert.assertEquals(this.verticies.length, verticies.length);
-		this.verticies = Arrays.copyOf(verticies, verticies.length);
+		Assert.assertEquals(this.vertices.length, verticies.length);
+		this.vertices = Arrays.copyOf(verticies, verticies.length);
 		updateData();
 	}
 
@@ -75,4 +113,9 @@ public class VBO {
 	public int getUsage() {
 		return usage;
 	}
+
+	public boolean isTextured() {
+		return isTextured;
+	}
+
 }

@@ -25,19 +25,19 @@ import component.Component;
 
 import core.Entity;
 
-public class EntityOne extends Entity {
+public class EntityTwo extends Entity {
 
-	private Vec2 position = new Vec2(0.0f, 0.0f);
+	private Vec2 position = new Vec2(0.5f, 0.5f);
 	private Vec2 dimension = new Vec2(0.1f, 0.1f);
 
-	public EntityOne(String id) {
+	public EntityTwo(String id) {
 		super(id);
 	}
 
 	@Override
 	protected void createComponents() {
 		
-		addComponent(new Component("Movement", true) {
+		this.addComponent(new Component("Movement", true) {
 			@Override
 			public void update(int delta) {
 				if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
@@ -53,7 +53,6 @@ public class EntityOne extends Entity {
 				else if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
 					position.y -= 0.001f * delta;
 				}
-				// System.out.println(String.format("%s, %s", position.x, position.y));
 			}
 
 			@Override
@@ -61,7 +60,7 @@ public class EntityOne extends Entity {
 			}
 		});
 
-		addComponent(new Component("Render", true) {
+		this.addComponent(new Component("Render", true) {
 
 			private VAO vao = new VAO();
 			private ShaderProgram shaderProgram = new ShaderProgram();
@@ -123,17 +122,6 @@ public class EntityOne extends Entity {
 				vao.destroy();
 				texture.destroy();
 				shaderProgram.destroy();
-			}
-		});
-		
-		addComponent(new Component("Physics", true) {
-			
-			@Override
-			public void update(int delta) {
-			}
-			
-			@Override
-			public void destroy() {
 			}
 		});
 	}

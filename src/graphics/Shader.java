@@ -2,7 +2,9 @@ package graphics;
 
 import java.io.IOException;
 
-import util.Utils;
+import util.GL;
+import util.GLException;
+import util.IO;
 import static org.lwjgl.opengl.GL20.*;
 
 public class Shader {
@@ -12,15 +14,16 @@ public class Shader {
 	private String path;
 	private String source;
 
-	public Shader(String path, int type) throws IOException {
+	public Shader(String path, int type) throws IOException, GLException {
 		this.path = path;
 		this.type = type;
 		id = glCreateShader(type);
-		source = Utils.getFileContent(path);
+		source = IO.getFileContent(path);
 		glShaderSource(id, source);
 		glCompileShader(id);
+		GL.checkShaderInfo(id);
 	}
-	
+
 	public void destroy() {
 		glDeleteShader(id);
 	}

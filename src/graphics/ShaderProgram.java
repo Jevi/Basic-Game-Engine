@@ -5,7 +5,8 @@ import static org.lwjgl.opengl.GL20.*;
 import java.util.HashSet;
 import java.util.Set;
 
-import util.Utils;
+import util.GL;
+import util.GLException;
 
 public class ShaderProgram {
 
@@ -25,6 +26,8 @@ public class ShaderProgram {
 			shader.destroy();
 		}
 		glDeleteProgram(id);
+		shaders = new HashSet<Shader>();
+		attriutes = new HashSet<String>();
 	}
 
 	public void bind() {
@@ -35,40 +38,36 @@ public class ShaderProgram {
 		glUseProgram(0);
 	}
 
-	public boolean attachShader(Shader shader) {
+	public boolean attachShader(Shader shader) throws GLException {
 		if (!shaders.contains(shader) && !isLinked) {
 			glAttachShader(id, shader.getId());
+			GL.checkError();
 			shaders.add(shader);
 			return true;
 		}
 		return false;
 	}
 
-	public boolean bindAttributeLocation(String attribute) {
+	public boolean bindAttributeLocation(String attribute) throws GLException {
 		if (!attriutes.contains(attribute)) {
 			glBindAttribLocation(id, attriutes.size(), attribute);
+			GL.checkError();
 			attriutes.add(attribute);
 			return true;
 		}
 		return false;
 	}
 
-	public void link() {
+	public void link() throws GLException {
 		if (!isLinked) {
 			glLinkProgram(id);
+			GL.checkError();
 		}
 	}
 
-	public boolean validate() {
+	public void validate() throws GLException {
 		glValidateProgram(id);
-		try {
-			Utils.glCheckError();
-		}
-		catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
+		GL.checkError();
 	}
 
 	public int getId() {

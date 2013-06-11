@@ -4,11 +4,16 @@ import java.util.Arrays;
 
 public class Vertex {
 	// Vertex data
-	private float[] xyzw = new float[] { 0f, 0f, 0f, 1f };
-	private float[] rgba = new float[] { 1f, 1f, 1f, 1f };
+	protected float[] xyzw = new float[] { 0f, 0f, 0f, 1f };
+	protected float[] rgba = new float[] { 1f, 1f, 1f, 1f };
 
 	// The amount of elements that a vertex has
 	public static final int elementCount = 8;
+
+	public static final int positionElementCount = 4;
+
+	public static final int colorElementCount = 4;
+
 	// The amount of bytes an element has
 	public static final int elementBytes = 4;
 	// The size of a vertex in bytes, like in C/C++: sizeof(Vertex)
@@ -61,19 +66,9 @@ public class Vertex {
 	@Override
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("[");
-		for (float f : xyzw) {
-			stringBuilder.append(f);
-			stringBuilder.append(", ");
-		}
-		stringBuilder.append("] ");
-
-		stringBuilder.append("[");
-		for (float f : rgba) {
-			stringBuilder.append(f);
-			stringBuilder.append(", ");
-		}
-		stringBuilder.append("]");
+		stringBuilder.append(Arrays.toString(xyzw));
+		stringBuilder.append(", ");
+		stringBuilder.append(Arrays.toString(rgba));
 		return stringBuilder.toString();
 	}
 }
