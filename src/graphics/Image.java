@@ -10,13 +10,11 @@ import util.GLException;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.GL20.*;
 
 public class Image {
 
-	private VAO vao = new VAO();
+	private VBO vbo;
 	private Texture texture;
-	private ShaderProgram shaderProgram = new ShaderProgram();
 
 	private TexturedVertex[] vertices;
 	private Vec2 position = new Vec2(0.0f, 0.0f);
@@ -32,20 +30,8 @@ public class Image {
 	}
 
 	public Image(String path, Vec2 position, int width, int height) throws GLException, IOException {
-
-		/*System.out.println(String.format("Window Position (%s, %s)", position.x, position.y));
-		System.out.println(String.format("Window Dimension (%s, %s)", width, height));*/
-
 		this.position = GL.windowCoordinatesToGlCoordinates(position);
 		dimension = GL.windowDimensionsToGlDimension(new Vec2(width, height));
-
-		/*System.out.println(String.format("GL Position (%s, %s)", this.position.x, this.position.y));
-		System.out.println(String.format("GL Dimension (%s, %s)", dimension.x, dimension.y));
-
-		Vec2 windowDimensions = GL.glDimensionsToWindowDimensions(dimension);
-
-		System.out.println(String.format("Calculated Window Dimension (%s, %s)", windowDimensions.x, windowDimensions.y));*/
-
 		init(path);
 	}
 
@@ -64,16 +50,8 @@ public class Image {
 		vertices[3].setXY(position.x + dimension.x, position.y + dimension.y);
 		vertices[3].setST(1, 0);
 
-		vao.addVBO(new VBO(vertices, GL_QUADS, GL_STATIC_DRAW));
+		vbo = new VBO(vertices, GL_QUADS, GL_STATIC_DRAW);
 		texture = new Texture(path, GL_TEXTURE0);
-
-		shaderProgram.attachShader(new Shader("shaders/textureVertex.glsl", GL_VERTEX_SHADER));
-		shaderProgram.attachShader(new Shader("shaders/textureFragment.glsl", GL_FRAGMENT_SHADER));
-		shaderProgram.link();
-		shaderProgram.bindAttributeLocation("in_Position");
-		shaderProgram.bindAttributeLocation("in_Color");
-		shaderProgram.bindAttributeLocation("in_TextureCoord");
-		shaderProgram.validate();
 	}
 
 	private void updateData() {
@@ -82,12 +60,11 @@ public class Image {
 		vertices[2].setXY(position.x + dimension.x, position.y - dimension.y);
 		vertices[3].setXY(position.x + dimension.x, position.y + dimension.y);
 
-		vao.getVBO(0).setVertices(vertices);
+		vbo.setVertices(vertices);
 	}
 
 	public void destroy() {
-		vao.destroy();
-		shaderProgram.destroy();
+		vbo.destroy();
 		texture.destroy();
 	}
 
@@ -96,7 +73,7 @@ public class Image {
 	}
 
 	public void render() {
-		Graphics.render(vao, shaderProgram, texture);
+		Graphics.render(vbo, texture);
 	}
 
 	public Vec2 getPosition() {
@@ -109,7 +86,7 @@ public class Image {
 	}
 
 	public Vec2 getDimension() {
-		return dimension;
+		return GL.glDimensionsToWindowDimensions(dimension);
 	}
 
 	public void setDimension(Vec2 dimension) {

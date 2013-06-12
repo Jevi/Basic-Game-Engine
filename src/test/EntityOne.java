@@ -28,17 +28,17 @@ public class EntityOne extends Entity {
 			@Override
 			public void update(int delta) {
 				if (Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-					position.x -= 0.001f * delta;
+					position.x -= 1 * delta;
 				}
 				else if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-					position.x += 0.001f * delta;
+					position.x += 1 * delta;
 				}
 
 				if (Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-					position.y += 0.001f * delta;
+					position.y += 1 * delta;
 				}
 				else if (Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-					position.y -= 0.001f * delta;
+					position.y -= 1 * delta;
 				}
 			}
 
@@ -65,6 +65,8 @@ public class EntityOne extends Entity {
 
 			@Override
 			public void update(int delta) {
+				System.out.println(String.format("Window Position (%s, %s)", position.x, position.y));
+				smile.setPosition(position);
 				smile.render();
 			}
 
