@@ -8,6 +8,12 @@ import java.util.Map.Entry;
 
 public class Graphics {
 
+	public static void render(VBO vbo, ShaderProgram shaderProgram, Texture texture) {
+		shaderProgram.bind();
+		glDrawArrays(vbo.getMode(), 0, TexturedVertex.elementCount);
+		shaderProgram.unbind();
+	}
+
 	public static void render(VAO vao, ShaderProgram shaderProgram) {
 		shaderProgram.bind();
 		vao.bind();

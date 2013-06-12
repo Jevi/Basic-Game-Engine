@@ -96,9 +96,9 @@ public class VBO {
 		return Arrays.copyOf(vertices, vertices.length);
 	}
 
-	public void setVerticies(Vertex[] verticies) {
-		Assert.assertEquals(this.vertices.length, verticies.length);
-		this.vertices = Arrays.copyOf(verticies, verticies.length);
+	public void setVertices(Vertex[] vertices) {
+		Assert.assertEquals(this.vertices.length, vertices.length);
+		this.vertices = Arrays.copyOf(vertices, vertices.length);
 		updateData();
 	}
 

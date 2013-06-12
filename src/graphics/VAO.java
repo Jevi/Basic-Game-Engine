@@ -65,6 +65,10 @@ public class VAO {
 		return vaoId;
 	}
 
+	public VBO getVBO(int index) {
+		return attributeListIndexToVboMap.get(index);
+	}
+
 	public Set<Entry<Integer, VBO>> getVBOs() {
 		return attributeListIndexToVboMap.entrySet();
 	}
