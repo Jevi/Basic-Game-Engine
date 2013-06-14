@@ -1,7 +1,6 @@
 package component;
 
 import junit.framework.Assert;
-import core.Entity;
 
 public abstract class Component {
 

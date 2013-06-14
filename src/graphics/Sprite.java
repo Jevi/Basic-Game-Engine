@@ -2,7 +2,7 @@ package graphics;
 
 import java.io.IOException;
 
-import org.jbox2d.common.Vec2;
+import org.lwjgl.util.vector.Vector2f;
 
 import util.GL;
 import util.GLException;
@@ -10,28 +10,24 @@ import util.GLException;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.ARBTextureRectangle.*;
 
-public class Image {
+public class Sprite {
 
 	private VBO vbo;
 	private Texture texture;
 
 	private TexturedVertex[] vertices;
-	private Vec2 position = new Vec2(0.0f, 0.0f);
-	private Vec2 dimension = new Vec2(0.1f, 0.1f);
+	private Vector2f position = new Vector2f(0.0f, 0.0f);
+	private Vector2f dimension = new Vector2f(0.1f, 0.1f);
 
-	public Image(String path) throws GLException, IOException {
+	public Sprite(String path) throws GLException, IOException {
 		init(path);
 	}
 
-	public Image(String path, int width, int height) throws GLException, IOException {
-		dimension = GL.windowCoordinatesToGlCoordinates(new Vec2(width, height));
-		init(path);
-	}
-
-	public Image(String path, Vec2 position, int width, int height) throws GLException, IOException {
+	public Sprite(String path, Vector2f position, Vector2f dimension) throws GLException, IOException {
 		this.position = GL.windowCoordinatesToGlCoordinates(position);
-		dimension = GL.windowDimensionsToGlDimension(new Vec2(width, height));
+		this.dimension = GL.windowDimensionsToGlDimension(dimension);
 		init(path);
 	}
 
@@ -51,7 +47,8 @@ public class Image {
 		vertices[3].setST(1, 0);
 
 		vbo = new VBO(vertices, GL_QUADS, GL_STATIC_DRAW);
-		texture = new Texture(path, GL_TEXTURE0);
+		texture = new Texture(path, GL_TEXTURE_2D, GL_TEXTURE0);
+
 	}
 
 	private void updateData() {
@@ -76,20 +73,20 @@ public class Image {
 		Graphics.render(vbo, texture);
 	}
 
-	public Vec2 getPosition() {
+	public Vector2f getPosition() {
 		return GL.glCoordinatesToWindowCoordinates(position);
 	}
 
-	public void setPosition(Vec2 position) {
+	public void setPosition(Vector2f position) {
 		this.position = GL.windowCoordinatesToGlCoordinates(position);
 		updateData();
 	}
 
-	public Vec2 getDimension() {
+	public Vector2f getDimension() {
 		return GL.glDimensionsToWindowDimensions(dimension);
 	}
 
-	public void setDimension(Vec2 dimension) {
+	public void setDimension(Vector2f dimension) {
 		this.dimension = GL.windowDimensionsToGlDimension(dimension);
 		updateData();
 	}

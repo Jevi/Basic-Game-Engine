@@ -1,6 +1,5 @@
 package core;
 
-import org.lwjgl.input.Keyboard;
 
 public class GameContainerConfig {
 
@@ -12,9 +11,6 @@ public class GameContainerConfig {
 	private boolean isResizable;
 	private boolean isFullScreen;
 
-	// universal keys
-	private int escKey;
-
 	public GameContainerConfig() {
 		width = 800;
 		height = 600;
@@ -22,8 +18,6 @@ public class GameContainerConfig {
 		isVSyncEnabled = false;
 		isResizable = false;
 		isFullScreen = false;
-
-		escKey = Keyboard.KEY_ESCAPE;
 	}
 
 	public int getWidth() {
@@ -72,14 +66,6 @@ public class GameContainerConfig {
 
 	public void setFullScreen(boolean isFullScreen) {
 		this.isFullScreen = isFullScreen;
-	}
-
-	public int getEscKey() {
-		return escKey;
-	}
-
-	public void setEscKey(int escKey) {
-		this.escKey = escKey;
 	}
 
 }

@@ -1,11 +1,11 @@
-package core;
+package component;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import junit.framework.Assert;
 
-import component.Component;
+import core.GameContainer;
 
 public abstract class Entity {
 

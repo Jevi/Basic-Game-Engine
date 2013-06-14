@@ -5,12 +5,14 @@ import junit.framework.Assert;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.Display;
-import static org.lwjgl.opengl.GL11.glViewport;
+import org.lwjgl.opengl.DisplayMode;
 
 public abstract class GameContainer {
 
 	private Game game;
 	protected GameContainerConfig gameContainerConfig;
+	protected DisplayMode initialDisplayMode;
+	protected DisplayMode previousDisplayMode;
 
 	private int fps = 0;
 	private long lastFPS = 0;
@@ -24,6 +26,8 @@ public abstract class GameContainer {
 
 	protected void init() throws LWJGLException {
 		game.init(this);
+		initialDisplayMode = Display.getDisplayMode();
+		previousDisplayMode = Display.getDisplayMode();
 	}
 
 	protected void destroy() {
@@ -37,12 +41,6 @@ public abstract class GameContainer {
 
 		Display.update();
 		Display.sync(gameContainerConfig.getSync());
-
-		if (Display.wasResized()) {
-			gameContainerConfig.setWidth(Display.getWidth());
-			gameContainerConfig.setHeight(Display.getHeight());
-			glViewport(0, 0, gameContainerConfig.getWidth(), gameContainerConfig.getHeight());
-		}
 	}
 
 	public long getTime() {

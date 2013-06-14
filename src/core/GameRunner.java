@@ -41,6 +41,7 @@ public class GameRunner extends GameContainer {
 		Display.create();
 
 		glViewport(0, 0, gameContainerConfig.getWidth(), gameContainerConfig.getHeight());
+		glClearColor(0.4f, 0.6f, 0.9f, 0f);
 	}
 
 	public void start() throws LWJGLException {
@@ -57,9 +58,68 @@ public class GameRunner extends GameContainer {
 		return Display.isCloseRequested() || isCloseRequested;
 	}
 
-	protected void checkInput() {
-		if (Keyboard.isKeyDown(gameContainerConfig.getEscKey())) {
-			isCloseRequested = true;
+	protected void checkInput() throws LWJGLException {
+		while (Keyboard.next()) {
+			if (!Keyboard.getEventKeyState()) {
+				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
+					isCloseRequested = true;
+				}
+				else if (Keyboard.getEventKey() == Keyboard.KEY_F11) {
+					gameContainerConfig.setFullScreen(!gameContainerConfig.isFullScreen());
+					if (gameContainerConfig.isFullScreen()) {
+						setDisplayMode(Display.getWidth(), Display.getHeight(), true);
+					}
+					else {
+						Display.setFullscreen(false);
+						Display.setDisplayMode(previousDisplayMode);
+					}
+				}
+			}
 		}
+	}
+
+	public boolean setDisplayMode(int width, int height, boolean fullscreen) {
+
+		if (Display.getDisplayMode().getWidth() == width && Display.getDisplayMode().getHeight() == height && Display.isFullscreen() == fullscreen) {
+			return true;
+		}
+
+		try {
+			DisplayMode targetDisplayMode = null;
+
+			if (fullscreen) {
+				DisplayMode[] availableDisplayModes = Display.getAvailableDisplayModes();
+				int frequency = 0;
+
+				for (DisplayMode displayMode : availableDisplayModes) {
+					if (displayMode.getWidth() == width && displayMode.getHeight() == height) {
+						if (targetDisplayMode == null && displayMode.getFrequency() >= frequency) {
+							targetDisplayMode = displayMode;
+							frequency = targetDisplayMode.getFrequency();
+						}
+
+						if (displayMode.getBitsPerPixel() == Display.getDesktopDisplayMode().getBitsPerPixel() && displayMode.getFrequency() == Display.getDesktopDisplayMode().getFrequency()) {
+							targetDisplayMode = displayMode;
+							break;
+						}
+					}
+				}
+			}
+			else {
+				targetDisplayMode = new DisplayMode(width, height);
+			}
+
+			if (targetDisplayMode == null) {
+				System.err.println("Failed to find value mode: " + width + "x" + height + " fs=" + fullscreen);
+				return false;
+			}
+			Display.setDisplayMode(targetDisplayMode);
+			Display.setFullscreen(fullscreen);
+		}
+		catch (LWJGLException e) {
+			System.err.println("Unable to setup mode " + width + "x" + height + " fullscreen=" + fullscreen + e);
+			return false;
+		}
+		return true;
 	}
 }

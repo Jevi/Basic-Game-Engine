@@ -8,11 +8,30 @@ import java.util.Map.Entry;
 
 public class Graphics {
 
+	public static void render(VBO vbo) {
+		vbo.bind();
+
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_COLOR_ARRAY);
+
+		glVertexPointer(Vertex.positionElementCount, GL_FLOAT, Vertex.stride, Vertex.positionByteOffset);
+		glColorPointer(Vertex.colorElementCount, GL_FLOAT, Vertex.stride, Vertex.colorByteOffset);
+
+		glDrawArrays(vbo.getMode(), 0, Vertex.elementCount);
+
+		glDisableClientState(GL_COLOR_ARRAY);
+		glDisableClientState(GL_VERTEX_ARRAY);
+
+		vbo.unbind();
+	}
+
 	public static void render(VBO vbo, Texture texture) {
 		texture.bind();
 		vbo.bind();
 
-		glEnable(GL_TEXTURE_2D);
+		glEnable(texture.getTarget());
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_COLOR_ARRAY);
@@ -28,7 +47,8 @@ public class Graphics {
 		glDisableClientState(GL_COLOR_ARRAY);
 		glDisableClientState(GL_VERTEX_ARRAY);
 
-		glDisable(GL_TEXTURE_2D);
+		glDisable(GL_BLEND);
+		glDisable(texture.getTarget());
 
 		vbo.unbind();
 	}
@@ -42,9 +62,9 @@ public class Graphics {
 			VBO vbo = entry.getValue();
 			glEnableVertexAttribArray(index);
 			glEnableVertexAttribArray(index + 1);
-			
+
 			glDrawArrays(vbo.getMode(), 0, Vertex.elementCount);
-			
+
 			glDisableVertexAttribArray(index);
 			glDisableVertexAttribArray(index + 1);
 		}
@@ -66,9 +86,9 @@ public class Graphics {
 			glEnableVertexAttribArray(index);
 			glEnableVertexAttribArray(index + 1);
 			glEnableVertexAttribArray(index + 2);
-			
+
 			glDrawArrays(vbo.getMode(), 0, TexturedVertex.elementCount);
-			
+
 			glDisableVertexAttribArray(index);
 			glDisableVertexAttribArray(index + 1);
 			glDisableVertexAttribArray(index + 2);

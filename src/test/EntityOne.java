@@ -1,21 +1,21 @@
 package test;
 
-import graphics.Image;
+import graphics.Sprite;
 
 import java.io.IOException;
 
-import org.jbox2d.common.Vec2;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector2f;
 
 import util.GLException;
 
 import component.Component;
-
-import core.Entity;
+import component.Entity;
 
 public class EntityOne extends Entity {
 
-	private Vec2 position = new Vec2(0.0f, 0.0f);
+	private Vector2f position = new Vector2f(Display.getWidth() / 2, Display.getHeight() / 2);
 
 	public EntityOne(String id) {
 		super(id);
@@ -49,13 +49,13 @@ public class EntityOne extends Entity {
 
 		addComponent(new Component("Render", true) {
 
-			Image smile;
+			Sprite smile;
 
 			public void init(Entity entity) {
 				super.init(entity);
 
 				try {
-					smile = new Image("res/img/smile.png", new Vec2(90, 90), 100, 100);
+					smile = new Sprite("res/img/ss_mario.png", position, new Vector2f(300, 200));
 					smile.load();
 				}
 				catch (GLException | IOException e) {
@@ -65,7 +65,6 @@ public class EntityOne extends Entity {
 
 			@Override
 			public void update(int delta) {
-				System.out.println(String.format("Window Position (%s, %s)", position.x, position.y));
 				smile.setPosition(position);
 				smile.render();
 			}

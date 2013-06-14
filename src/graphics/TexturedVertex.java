@@ -2,6 +2,8 @@ package graphics;
 
 import java.util.Arrays;
 
+import org.lwjgl.util.vector.Vector2f;
+
 import util.Utils;
 
 public class TexturedVertex extends Vertex {
@@ -33,6 +35,10 @@ public class TexturedVertex extends Vertex {
 
 	public void setST(float s, float t) {
 		st = new float[] { s, t };
+	}
+
+	public void setST(Vector2f vec) {
+		st = new float[] { vec.x, vec.y };
 	}
 
 	public float[] getElements() {
