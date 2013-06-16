@@ -20,7 +20,6 @@ public class Texture {
 
 	private String path;
 	private int id;
-	private int target;
 	private int textureUnit;
 
 	private ByteBuffer data;
@@ -29,13 +28,12 @@ public class Texture {
 
 	private boolean isLoaded = false;
 
-	public Texture(String path, int target, int textureUnit) throws FileNotFoundException {
+	public Texture(String path, int textureUnit) throws FileNotFoundException {
 		if (!Files.exists(Paths.get(path), LinkOption.NOFOLLOW_LINKS)) {
 			throw new FileNotFoundException(path + " not found!");
 		}
 
 		this.path = path;
-		this.target = target;
 		this.textureUnit = textureUnit;
 		id = glGenTextures();
 	}
@@ -47,11 +45,11 @@ public class Texture {
 	}
 
 	public void bind() {
-		glBindTexture(target, id);
+		glBindTexture(GL_TEXTURE_2D, id);
 	}
 
 	public void unbind() {
-		glBindTexture(target, id);
+		glBindTexture(GL_TEXTURE_2D, id);
 	}
 
 	public void load() throws IOException {
@@ -73,15 +71,15 @@ public class Texture {
 			// byte
 			glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-			glGenerateMipmap(target);
+			glGenerateMipmap(GL_TEXTURE_2D);
 
 			// setup the ST coordinate system
-			glTexParameteri(target, GL_TEXTURE_WRAP_S, GL_REPEAT);
-			glTexParameteri(target, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
 			// setup what to do when the texture has to be scaled
-			glTexParameteri(target, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-			glTexParameteri(target, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 
 			isLoaded = true;
 		}
@@ -89,10 +87,6 @@ public class Texture {
 
 	public String getPath() {
 		return path;
-	}
-
-	public int getTarget() {
-		return target;
 	}
 
 	public int getTextureUnit() {

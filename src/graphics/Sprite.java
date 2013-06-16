@@ -10,7 +10,6 @@ import util.GLException;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.opengl.ARBTextureRectangle.*;
 
 public class Sprite {
 
@@ -21,34 +20,42 @@ public class Sprite {
 	private Vector2f position = new Vector2f(0.0f, 0.0f);
 	private Vector2f dimension = new Vector2f(0.1f, 0.1f);
 
+	private Vector2f low = new Vector2f(0f, 0f);
+	private Vector2f high = new Vector2f(1f, 1f);
+
 	public Sprite(String path) throws GLException, IOException {
 		init(path);
 	}
 
 	public Sprite(String path, Vector2f position, Vector2f dimension) throws GLException, IOException {
-		this.position = GL.windowCoordinatesToGlCoordinates(position);
-		this.dimension = GL.windowDimensionsToGlDimension(dimension);
+		this.position = GL.pixelToGl(position);
+		this.dimension = GL.pixelDimensionsToGlDimension(dimension);
 		init(path);
 	}
 
 	private void init(String path) throws GLException, IOException {
+		texture = new Texture(path, GL_TEXTURE0);
+		load();
+
 		vertices = new TexturedVertex[4];
 		for (int i = 0; i < vertices.length; i++) {
 			vertices[i] = new TexturedVertex();
 		}
 
-		vertices[0].setXY(position.x - dimension.x, position.y + dimension.y);
-		vertices[0].setST(0, 0);
-		vertices[1].setXY(position.x - dimension.x, position.y - dimension.y);
-		vertices[1].setST(0, 1);
-		vertices[2].setXY(position.x + dimension.x, position.y - dimension.y);
-		vertices[2].setST(1, 1);
-		vertices[3].setXY(position.x + dimension.x, position.y + dimension.y);
-		vertices[3].setST(1, 0);
+		vertices[0].setXY(position.x - dimension.x, position.y + dimension.y); // top
+																				// left
+		vertices[0].setST(low.x, low.y);
+		vertices[1].setXY(position.x - dimension.x, position.y - dimension.y); // bottom
+																				// left
+		vertices[1].setST(low.x, high.y);
+		vertices[2].setXY(position.x + dimension.x, position.y - dimension.y); // bottom
+																				// right
+		vertices[2].setST(high.x, high.y);
+		vertices[3].setXY(position.x + dimension.x, position.y + dimension.y); // top
+																				// right
+		vertices[3].setST(high.x, low.y);
 
 		vbo = new VBO(vertices, GL_QUADS, GL_STATIC_DRAW);
-		texture = new Texture(path, GL_TEXTURE_2D, GL_TEXTURE0);
-
 	}
 
 	private void updateData() {
@@ -74,20 +81,20 @@ public class Sprite {
 	}
 
 	public Vector2f getPosition() {
-		return GL.glCoordinatesToWindowCoordinates(position);
+		return GL.glToPixel(position);
 	}
 
 	public void setPosition(Vector2f position) {
-		this.position = GL.windowCoordinatesToGlCoordinates(position);
+		this.position = GL.pixelToGl(position);
 		updateData();
 	}
 
 	public Vector2f getDimension() {
-		return GL.glDimensionsToWindowDimensions(dimension);
+		return GL.glDimensionsToPixelDimensions(dimension);
 	}
 
 	public void setDimension(Vector2f dimension) {
-		this.dimension = GL.windowDimensionsToGlDimension(dimension);
+		this.dimension = GL.pixelDimensionsToGlDimension(dimension);
 		updateData();
 	}
 }

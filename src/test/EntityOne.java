@@ -1,7 +1,8 @@
 package test;
 
-import graphics.Sprite;
+import graphics.SpriteSheet;
 
+import java.awt.Frame;
 import java.io.IOException;
 
 import org.lwjgl.input.Keyboard;
@@ -49,14 +50,13 @@ public class EntityOne extends Entity {
 
 		addComponent(new Component("Render", true) {
 
-			Sprite smile;
+			SpriteSheet font;
 
 			public void init(Entity entity) {
 				super.init(entity);
 
 				try {
-					smile = new Sprite("res/img/ss_mario.png", position, new Vector2f(300, 200));
-					smile.load();
+					font = new SpriteSheet("res/fonts/Consolas.png", new Vector2f(32, 32));
 				}
 				catch (GLException | IOException e) {
 					e.printStackTrace();
@@ -65,13 +65,12 @@ public class EntityOne extends Entity {
 
 			@Override
 			public void update(int delta) {
-				smile.setPosition(position);
-				smile.render();
+				font.render();
 			}
 
 			@Override
 			public void destroy() {
-				smile.destroy();
+				font.destroy();
 			}
 		});
 	}
