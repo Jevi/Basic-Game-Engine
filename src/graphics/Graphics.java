@@ -51,6 +51,7 @@ public class Graphics {
 		glDisable(GL_TEXTURE_2D);
 
 		vbo.unbind();
+		texture.unbind();
 	}
 
 	public static void render(VAO vao, ShaderProgram shaderProgram) {
@@ -75,11 +76,10 @@ public class Graphics {
 
 	public static void render(VAO vao, ShaderProgram shaderProgram, Texture texture) {
 		shaderProgram.bind();
-
 		glActiveTexture(texture.getTextureUnit());
 		texture.bind();
-
 		vao.bind();
+
 		for (Entry<Integer, VBO> entry : vao.getVBOs()) {
 			Integer index = entry.getKey();
 			VBO vbo = entry.getValue();
@@ -95,6 +95,7 @@ public class Graphics {
 		}
 
 		vao.unbind();
+		texture.unbind();
 		shaderProgram.unbind();
 	}
 

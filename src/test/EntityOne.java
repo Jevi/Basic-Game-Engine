@@ -2,10 +2,10 @@ package test;
 
 import graphics.SpriteSheet;
 
-import java.awt.Frame;
 import java.io.IOException;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 
@@ -56,15 +56,24 @@ public class EntityOne extends Entity {
 				super.init(entity);
 
 				try {
-					font = new SpriteSheet("res/fonts/Consolas.png", new Vector2f(32, 32));
+					font = new SpriteSheet("res/img/spritesheet.png", new Vector2f(100, 68), position, new Vector2f(48.333333333333f, 68));
 				}
 				catch (GLException | IOException e) {
 					e.printStackTrace();
 				}
 			};
 
+			int deltaTime = 0;
+
 			@Override
 			public void update(int delta) {
+				if (deltaTime < 300) {
+					deltaTime += delta;
+				}
+				else {
+					font.setFrame(font.getFrame() + 1);
+					deltaTime = 0;
+				}
 				font.render();
 			}
 

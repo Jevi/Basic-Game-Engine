@@ -22,9 +22,7 @@ public class StateBasedGameImpl extends StateBasedGame {
 
 	public static void main(String[] args) throws LWJGLException {
 		GameContainerConfig config = new GameContainerConfig();
-		config.setWidth(1280);
-		config.setHeight(720);
-		config.setSync(60);
+		// config.setSync(60);
 
 		GameRunner gameEngine = new GameRunner(new StateBasedGameImpl("Test Game"), config);
 		gameEngine.start();

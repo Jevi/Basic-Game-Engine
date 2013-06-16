@@ -26,7 +26,7 @@ public class SpriteSheet {
 	private Vector2f low = new Vector2f(0f, 0f); // gl
 	private Vector2f high = new Vector2f(1f, 1f); // gl
 
-	private Vector2f frame = new Vector2f(0, 0);
+	private int frame = 16;
 
 	private Vector2f spriteDimension; // pixels
 	private Vector2f frameCount;
@@ -52,7 +52,7 @@ public class SpriteSheet {
 		frameCount = new Vector2f(texture.getWidth() / spriteDimension.x, texture.getHeight() / spriteDimension.y);
 		frameDimensions = new Vector2f(1 / frameCount.x, 1 / frameCount.y);
 
-		low = new Vector2f((frame.x % frameCount.x) * frameDimensions.x, (frame.y % frameCount.y) * frameDimensions.y);
+		low = new Vector2f((frame % frameCount.x) * frameDimensions.x, (frame / (int) frameCount.y) * frameDimensions.y);
 		high = new Vector2f(low.x + frameDimensions.x, low.y + frameDimensions.y);
 
 		vertices = new TexturedVertex[4];
@@ -74,7 +74,7 @@ public class SpriteSheet {
 
 	private void updateData() {
 
-		low = new Vector2f((frame.x % frameCount.x) * frameDimensions.x, (frame.y % frameCount.y) * frameDimensions.y);
+		low = new Vector2f((frame % frameCount.x) * frameDimensions.x, (frame / (int) frameCount.y) * frameDimensions.y);
 		high = new Vector2f(low.x + frameDimensions.x, low.y + frameDimensions.y);
 
 		vertices[0].setXY(position.x - dimension.x, position.y + dimension.y);
@@ -116,21 +116,13 @@ public class SpriteSheet {
 		updateData();
 	}
 
-	public Vector2f getFrame() {
+	public int getFrame() {
 		return frame;
 	}
 
-	public void setFrame(Vector2f frame) {
-		this.frame = new Vector2f(frame);
+	public void setFrame(int frame) {
+		this.frame = frame;
 		updateData();
-	}
-
-	public Vector2f getLow() {
-		return low;
-	}
-
-	public Vector2f getHigh() {
-		return high;
 	}
 
 	public Vector2f getSpriteDimension() {
@@ -139,9 +131,5 @@ public class SpriteSheet {
 
 	public Vector2f getFrameCount() {
 		return frameCount;
-	}
-
-	public Vector2f getFrameDimensions() {
-		return frameDimensions;
 	}
 }
