@@ -1,25 +1,34 @@
 package component;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
+
+import util.Log;
+import static util.DebugLevel.*;
 
 import junit.framework.Assert;
 
 import core.GameContainer;
+import core.GameState;
 
 public abstract class Entity {
 
 	private String id;
 	protected GameContainer gameContainer;
-	private Set<Component> components = new HashSet<Component>();
+	protected GameState gameState;
+	private Set<Component> components = new LinkedHashSet<Component>();
 
 	public Entity(String id) {
 		this.id = id;
 	}
 
-	public void init(GameContainer gameContainer) {
+	public void init(GameContainer gameContainer, GameState gameState) {
 		Assert.assertNotNull(gameContainer);
+		Assert.assertNotNull(gameState);
+
 		this.gameContainer = gameContainer;
+		this.gameState = gameState;
 
 		createComponents();
 		for (Component component : components) {
@@ -27,6 +36,8 @@ public abstract class Entity {
 				component.init(this);
 			}
 		}
+
+		Log.println(LOW_DEBUG, toString() + " Initialization Complete");
 	}
 
 	protected abstract void createComponents();
@@ -35,6 +46,8 @@ public abstract class Entity {
 		for (Component component : components) {
 			component.destroy();
 		}
+
+		Log.println(LOW_DEBUG, toString() + " Destruction Complete");
 	}
 
 	public void update(int delta) {
@@ -92,5 +105,13 @@ public abstract class Entity {
 
 	public void removeAllComponents() {
 		components = new HashSet<Component>();
+
+		Log.println(LOW_DEBUG, toString() + " removed all components successfully");
 	}
+
+	@Override
+	public String toString() {
+		return "Entity [id=" + id + "]";
+	}
+
 }

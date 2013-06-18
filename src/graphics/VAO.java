@@ -40,21 +40,21 @@ public class VAO {
 			return false;
 		}
 
-		int vboVertexIndex = attributeListIndexToVboMap.size();
-		int vboColorIndex = vboVertexIndex + 1;
-		attributeListIndexToVboMap.put(vboVertexIndex, vbo);
+		int vertexAttribIndex = attributeListIndexToVboMap.size();
+		int colorAttribIndex = vertexAttribIndex + 1;
+		attributeListIndexToVboMap.put(vertexAttribIndex, vbo);
 
 		bind();
 		vbo.bind();
 		if (vbo.isTextured()) {
-			int vboTextureIndex = vboVertexIndex + 2;
-			glVertexAttribPointer(vboVertexIndex, TexturedVertex.positionElementCount, GL_FLOAT, false, TexturedVertex.stride, TexturedVertex.positionByteOffset);
-			glVertexAttribPointer(vboColorIndex, TexturedVertex.colorElementCount, GL_FLOAT, false, TexturedVertex.stride, TexturedVertex.colorByteOffset);
-			glVertexAttribPointer(vboTextureIndex, TexturedVertex.textureElementCount, GL_FLOAT, false, TexturedVertex.stride, TexturedVertex.textureByteOffset);
+			int textureAttribIndex = vertexAttribIndex + 2;
+			glVertexAttribPointer(vertexAttribIndex, TexturedVertex.positionElementCount, GL_FLOAT, false, TexturedVertex.stride, TexturedVertex.positionByteOffset);
+			glVertexAttribPointer(colorAttribIndex, TexturedVertex.colorElementCount, GL_FLOAT, false, TexturedVertex.stride, TexturedVertex.colorByteOffset);
+			glVertexAttribPointer(textureAttribIndex, TexturedVertex.textureElementCount, GL_FLOAT, false, TexturedVertex.stride, TexturedVertex.textureByteOffset);
 		}
 		else {
-			glVertexAttribPointer(vboVertexIndex, Vertex.positionElementCount, GL_FLOAT, false, Vertex.stride, Vertex.positionByteOffset);
-			glVertexAttribPointer(vboColorIndex, Vertex.colorElementCount, GL_FLOAT, false, Vertex.stride, Vertex.colorByteOffset);
+			glVertexAttribPointer(vertexAttribIndex, Vertex.positionElementCount, GL_FLOAT, false, Vertex.stride, Vertex.positionByteOffset);
+			glVertexAttribPointer(colorAttribIndex, Vertex.colorElementCount, GL_FLOAT, false, Vertex.stride, Vertex.colorByteOffset);
 		}
 		vbo.unbind();
 		unbind();

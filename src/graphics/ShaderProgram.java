@@ -3,21 +3,25 @@ package graphics;
 import static org.lwjgl.opengl.GL20.*;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
+import static util.DebugLevel.*;
 import util.GL;
 import util.GLException;
+import util.Log;
 
 public class ShaderProgram {
 
 	private int id;
-	private Set<Shader> shaders = new HashSet<Shader>();
-	private Set<String> attriutes = new HashSet<String>();
+	private Set<Shader> shaders = new LinkedHashSet<Shader>();
+	private Set<String> attriutes = new LinkedHashSet<String>();
 
 	private boolean isLinked = false;
 
 	public ShaderProgram() {
 		id = glCreateProgram();
+		Log.println(LOW_DEBUG, toString() + " Initialization Complete");
 	}
 
 	public void destroy() {
@@ -28,6 +32,8 @@ public class ShaderProgram {
 		glDeleteProgram(id);
 		shaders = new HashSet<Shader>();
 		attriutes = new HashSet<String>();
+
+		Log.println(LOW_DEBUG, toString() + " Destruction Complete");
 	}
 
 	public void bind() {
@@ -73,4 +79,10 @@ public class ShaderProgram {
 	public int getId() {
 		return id;
 	}
+
+	@Override
+	public String toString() {
+		return "ShaderProgram [id=" + id + "]";
+	}
+
 }

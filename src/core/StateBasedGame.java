@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import util.Log;
+import static util.DebugLevel.*;
+
 import junit.framework.Assert;
 
 public abstract class StateBasedGame extends Game {
@@ -24,6 +27,8 @@ public abstract class StateBasedGame extends Game {
 	public void init(GameContainer gameContainer) {
 		this.gameContainer = gameContainer;
 		initGameStates();
+
+		Log.println(LOW_DEBUG, toString() + " Initialization Complete");
 	}
 
 	public abstract void initGameStates();
@@ -33,6 +38,8 @@ public abstract class StateBasedGame extends Game {
 		for (Entry<Integer, GameState> idToGameEntry : idToGameStateMap.entrySet()) {
 			idToGameEntry.getValue().destroy();
 		}
+
+		Log.println(LOW_DEBUG, toString() + " Destruction Complete");
 	}
 
 	@Override
@@ -53,12 +60,19 @@ public abstract class StateBasedGame extends Game {
 			this.gameState = gameState;
 			this.gameState.init(gameContainer, this);
 		}
+		Log.println(LOW_DEBUG, gameState.toString() + " added successfully");
 	}
 
 	public boolean removeGameState(int id) {
-		if (id != gameState.getID()) {
-			return idToGameStateMap.remove(idToGameStateMap.get(new Integer(id))) != null;
+		GameState gameState = idToGameStateMap.get(new Integer(id));
+
+		if (id != gameState.getID() && gameState != null) {
+			idToGameStateMap.remove(gameState);
+			Log.println(LOW_DEBUG, gameState.toString() + " removed successfully");
+			return true;
 		}
+
+		Log.println(LOW_DEBUG, gameState.toString() + " could not be removed");
 		return false;
 	}
 
@@ -92,5 +106,8 @@ public abstract class StateBasedGame extends Game {
 		gameState.destroy();
 		gameState = idToGameStateMap.get(id);
 		gameState.init(gameContainer, this);
+
+		Log.println(LOW_DEBUG, gameState.toString() + " was switched to successfully");
 	}
+
 }

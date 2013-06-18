@@ -1,5 +1,8 @@
 package component;
 
+import util.Log;
+import static util.DebugLevel.*;
+
 import junit.framework.Assert;
 
 public abstract class Component {
@@ -17,6 +20,8 @@ public abstract class Component {
 		Assert.assertNotNull(entity);
 
 		this.entity = entity;
+
+		Log.println(LOW_DEBUG, toString() + " Initilization Complete");
 	}
 
 	public abstract void destroy();
@@ -37,9 +42,17 @@ public abstract class Component {
 
 	public void enable() {
 		enabled = true;
+		Log.println(LOW_DEBUG, toString() + " enabled");
 	}
 
 	public void disable() {
 		enabled = false;
+		Log.println(LOW_DEBUG, toString() + " disabled");
 	}
+
+	@Override
+	public String toString() {
+		return "Component [entity=" + entity + ", id=" + id + ", enabled=" + enabled + "]";
+	}
+
 }

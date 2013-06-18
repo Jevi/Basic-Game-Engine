@@ -30,19 +30,20 @@ import component.Entity;
 import core.GameContainer;
 import core.GameState;
 
-public class EntityOne extends Entity {
+public class EntityTwo extends Entity {
 
 	private Body body;
-	private final float width = 100;
-	private final float height = 100;
+	private final float width = 800;
+	private final float height = 15;
 
-	public EntityOne(String id) {
+	public EntityTwo(String id) {
 		super(id);
 	}
 
 	@Override
 	public void init(GameContainer gameContainer, GameState gameState) {
 		super.init(gameContainer, gameState);
+
 	}
 
 	@Override
@@ -58,9 +59,8 @@ public class EntityOne extends Entity {
 					StateOne state = (StateOne) gameState;
 
 					BodyDef bodyDef = new BodyDef();
-					bodyDef.position.set(gameContainer.getWidth() / state.scale / 2.0f, gameContainer.getHeight() / state.scale / 2.0f);
-					bodyDef.type = BodyType.DYNAMIC;
-					// bodyDef.angle = 45;
+					bodyDef.position.set(gameContainer.getWidth() / state.scale / 2.0f, (gameContainer.getHeight() - 200.0f) / state.scale / 2.0f);
+					bodyDef.type = BodyType.STATIC;
 
 					PolygonShape polygonShape = new PolygonShape();
 					polygonShape.setAsBox((width / 2.0f) / state.scale, (height / 2.0f) / state.scale);
@@ -69,7 +69,7 @@ public class EntityOne extends Entity {
 
 					FixtureDef fixtureDef = new FixtureDef();
 					fixtureDef.density = 0.1f;
-					fixtureDef.restitution = 0f;
+					fixtureDef.restitution = 0.5f;
 					fixtureDef.shape = polygonShape;
 					body.createFixture(fixtureDef);
 				}
@@ -103,15 +103,15 @@ public class EntityOne extends Entity {
 				updateVertices();
 
 				// top left
-				vertices[0].setRGB(1, 0, 0);
+				vertices[0].setRGB(1, 1, 1);
 				// top right
-				vertices[1].setRGB(0, 1, 0);
+				vertices[1].setRGB(1, 1, 1);
 				// bottom right
-				vertices[2].setRGB(0, 0, 1);
+				vertices[2].setRGB(1, 1, 1);
 				// bottom left
-				vertices[3].setRGB(0, 0, 0);
+				vertices[3].setRGB(1, 1, 1);
 
-				vbo = new VBO(vertices, GL_QUADS, GL_DYNAMIC_DRAW);
+				vbo = new VBO(vertices, GL_QUADS, GL_STATIC_DRAW);
 
 				try {
 					shaderProgram.attachShader(new Shader("shaders/vertex.glsl", GL_VERTEX_SHADER));
@@ -131,7 +131,6 @@ public class EntityOne extends Entity {
 			public void update(int delta) {
 				updateVertices();
 				vbo.setVertices(vertices);
-
 				Graphics.render(vbo);
 			}
 

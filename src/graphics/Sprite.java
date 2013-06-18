@@ -42,17 +42,13 @@ public class Sprite {
 			vertices[i] = new TexturedVertex();
 		}
 
-		vertices[0].setXY(position.x - dimension.x, position.y + dimension.y); // top
-																				// left
+		vertices[0].setXY(position.x - dimension.x, position.y + dimension.y);
 		vertices[0].setST(low.x, low.y);
-		vertices[1].setXY(position.x - dimension.x, position.y - dimension.y); // bottom
-																				// left
+		vertices[1].setXY(position.x - dimension.x, position.y - dimension.y);
 		vertices[1].setST(low.x, high.y);
-		vertices[2].setXY(position.x + dimension.x, position.y - dimension.y); // bottom
-																				// right
+		vertices[2].setXY(position.x + dimension.x, position.y - dimension.y);
 		vertices[2].setST(high.x, high.y);
-		vertices[3].setXY(position.x + dimension.x, position.y + dimension.y); // top
-																				// right
+		vertices[3].setXY(position.x + dimension.x, position.y + dimension.y);
 		vertices[3].setST(high.x, low.y);
 
 		vbo = new VBO(vertices, GL_QUADS, GL_STATIC_DRAW);

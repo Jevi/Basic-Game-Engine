@@ -25,6 +25,24 @@ public class Graphics {
 		vbo.unbind();
 	}
 
+	public static void render(VBO vbo, ShaderProgram shaderProgram) {
+		shaderProgram.bind();
+		vbo.bind();
+
+		int vertexAttribIndex = vbo.getVertexAttribIndex();
+
+		glEnableVertexAttribArray(vertexAttribIndex);
+		glEnableVertexAttribArray(vertexAttribIndex + 1);
+
+		glDrawArrays(vbo.getMode(), 0, Vertex.elementCount);
+
+		glDisableVertexAttribArray(vertexAttribIndex);
+		glDisableVertexAttribArray(vertexAttribIndex + 1);
+
+		vbo.unbind();
+		shaderProgram.unbind();
+	}
+
 	public static void render(VBO vbo, Texture texture) {
 		texture.bind();
 		vbo.bind();

@@ -1,6 +1,8 @@
 package graphics;
 
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
+import static org.lwjgl.opengl.GL20.*;
 
 import java.nio.FloatBuffer;
 import java.util.Arrays;
@@ -8,6 +10,8 @@ import java.util.Arrays;
 import junit.framework.Assert;
 
 import org.lwjgl.BufferUtils;
+
+import util.GL;
 
 public class VBO {
 
@@ -19,24 +23,26 @@ public class VBO {
 	private int mode;
 	private int usage;
 
+	private int vertexAttribIndex;
+
 	private boolean isTextured = false;
 
-	public VBO(Vertex[] verticies, int mode, int usage) {
-		this.vertices = Arrays.copyOf(verticies, verticies.length);
+	public VBO(Vertex[] vertices, int mode, int usage) {
+		this.vertices = Arrays.copyOf(vertices, vertices.length);
 		this.mode = mode;
 		this.usage = usage;
-		vertexData = BufferUtils.createFloatBuffer(verticies.length * Vertex.elementCount);
+		vertexData = BufferUtils.createFloatBuffer(vertices.length * Vertex.elementCount);
 
 		id = glGenBuffers();
 		initData();
 	}
 
-	public VBO(TexturedVertex[] verticies, int mode, int usage) {
-		this.vertices = Arrays.copyOf(verticies, verticies.length);
+	public VBO(TexturedVertex[] vertices, int mode, int usage) {
+		this.vertices = Arrays.copyOf(vertices, vertices.length);
 		this.mode = mode;
 		this.usage = usage;
 		isTextured = true;
-		vertexData = BufferUtils.createFloatBuffer(verticies.length * TexturedVertex.elementCount);
+		vertexData = BufferUtils.createFloatBuffer(vertices.length * TexturedVertex.elementCount);
 
 		id = glGenBuffers();
 		initData();
@@ -57,6 +63,20 @@ public class VBO {
 
 		bind();
 		glBufferData(GL_ARRAY_BUFFER, vertexData, usage);
+
+		vertexAttribIndex = GL.getNextAvailableAttribIndex();
+		int colorAttribIndex = vertexAttribIndex + 1;
+
+		if (this.isTextured()) {
+			int textureAttribIndex = vertexAttribIndex + 2;
+			glVertexAttribPointer(vertexAttribIndex, TexturedVertex.positionElementCount, GL_FLOAT, false, TexturedVertex.stride, TexturedVertex.positionByteOffset);
+			glVertexAttribPointer(colorAttribIndex, TexturedVertex.colorElementCount, GL_FLOAT, false, TexturedVertex.stride, TexturedVertex.colorByteOffset);
+			glVertexAttribPointer(textureAttribIndex, TexturedVertex.textureElementCount, GL_FLOAT, false, TexturedVertex.stride, TexturedVertex.textureByteOffset);
+		}
+		else {
+			glVertexAttribPointer(vertexAttribIndex, Vertex.positionElementCount, GL_FLOAT, false, Vertex.stride, Vertex.positionByteOffset);
+			glVertexAttribPointer(colorAttribIndex, Vertex.colorElementCount, GL_FLOAT, false, Vertex.stride, Vertex.colorByteOffset);
+		}
 		unbind();
 	}
 
@@ -112,6 +132,10 @@ public class VBO {
 
 	public int getUsage() {
 		return usage;
+	}
+
+	public int getVertexAttribIndex() {
+		return vertexAttribIndex;
 	}
 
 	public boolean isTextured() {

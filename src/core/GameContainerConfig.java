@@ -1,6 +1,5 @@
 package core;
 
-
 public class GameContainerConfig {
 
 	// properties
@@ -66,6 +65,11 @@ public class GameContainerConfig {
 
 	public void setFullScreen(boolean isFullScreen) {
 		this.isFullScreen = isFullScreen;
+	}
+
+	@Override
+	public String toString() {
+		return "GameContainerConfig [width=" + width + ", height=" + height + ", sync=" + sync + ", isVSyncEnabled=" + isVSyncEnabled + ", isResizable=" + isResizable + ", isFullScreen=" + isFullScreen + "]";
 	}
 
 }

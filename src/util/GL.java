@@ -9,6 +9,14 @@ import org.lwjgl.util.vector.Vector2f;
 
 public class GL {
 
+	private static int currentAvailableAttributeIndex = 0;
+
+	public static synchronized int getNextAvailableAttribIndex() {
+		int index = currentAvailableAttributeIndex;
+		currentAvailableAttributeIndex++;
+		return index;
+	}
+
 	public static void checkError() throws GLException {
 		int errorValue = glGetError();
 		if (errorValue != GL_NO_ERROR) {
@@ -43,14 +51,6 @@ public class GL {
 		Vector2f windowDimensions = new Vector2f();
 		windowDimensions.x = ((1 + glDimensions.x) / 2) * Display.getWidth();
 		windowDimensions.y = ((1 + glDimensions.y) / 2) * Display.getHeight();
-
-		/*
-		 * if (windowDimensions.x > Display.getWidth() / 2) { windowDimensions.x
-		 * -= Display.getWidth() / 2; }
-		 * 
-		 * if (windowDimensions.y > Display.getHeight() / 2) {
-		 * windowDimensions.y -= Display.getHeight() / 2; }
-		 */
 
 		return windowDimensions;
 	}

@@ -26,7 +26,7 @@ public class SpriteSheet {
 	private Vector2f low = new Vector2f(0f, 0f); // gl
 	private Vector2f high = new Vector2f(1f, 1f); // gl
 
-	private int frame = 16;
+	private int frame = 0;
 
 	private Vector2f spriteDimension; // pixels
 	private Vector2f frameCount;
@@ -35,6 +35,7 @@ public class SpriteSheet {
 
 	public SpriteSheet(String path, Vector2f spriteDimensions) throws GLException, IOException {
 		this.spriteDimension = new Vector2f(spriteDimensions);
+		this.dimension = GL.pixelDimensionsToGlDimension(spriteDimensions);
 		init(path);
 	}
 
@@ -96,6 +97,10 @@ public class SpriteSheet {
 
 	public void render() {
 		Graphics.render(vbo, texture);
+	}
+
+	public Texture getTexture() {
+		return texture;
 	}
 
 	public Vector2f getPosition() {

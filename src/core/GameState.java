@@ -3,6 +3,9 @@ package core;
 import java.util.HashSet;
 import java.util.Set;
 
+import util.Log;
+import static util.DebugLevel.*;
+
 import component.Entity;
 
 import junit.framework.Assert;
@@ -26,14 +29,18 @@ public abstract class GameState {
 		this.stateBasedGame = stateBasedGame;
 
 		for (Entity entity : entities) {
-			entity.init(this.gameContainer);
+			entity.init(this.gameContainer, this);
 		}
+
+		Log.println(LOW_DEBUG, toString() + " Initialization Complete");
 	}
 
 	public void destroy() {
 		for (Entity entity : entities) {
 			entity.destroy();
 		}
+
+		Log.println(LOW_DEBUG, toString() + " Desctruction Complete");
 	}
 
 	public void update(int delta) {
@@ -52,4 +59,10 @@ public abstract class GameState {
 	public int getID() {
 		return id;
 	}
+
+	@Override
+	public String toString() {
+		return "GameState [id=" + id + "]";
+	}
+
 }
