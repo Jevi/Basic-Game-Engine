@@ -29,7 +29,7 @@ public class Graphics {
 		shaderProgram.bind();
 		vbo.bind();
 
-		int vertexAttribIndex = vbo.getVertexAttribIndex();
+		int vertexAttribIndex = 0;
 
 		glEnableVertexAttribArray(vertexAttribIndex);
 		glEnableVertexAttribArray(vertexAttribIndex + 1);

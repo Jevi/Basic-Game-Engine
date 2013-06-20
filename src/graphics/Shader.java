@@ -3,8 +3,6 @@ package graphics;
 import java.io.IOException;
 
 import util.GL;
-import util.GLException;
-import util.IO;
 import util.Log;
 import static util.DebugLevel.*;
 
@@ -14,15 +12,15 @@ public class Shader {
 
 	private int id;
 	private int type;
-	private String path;
 	private String source;
 
-	public Shader(String path, int type) throws IOException, GLException {
-		this.path = path;
+	public Shader(String source, int type) throws IOException {
+		this.source = source;
 		this.type = type;
 		id = glCreateShader(type);
-		source = IO.getFileContent(path);
+		GL.checkError();
 		glShaderSource(id, source);
+		GL.checkError();
 		glCompileShader(id);
 		GL.checkShaderInfo(id);
 
@@ -31,6 +29,7 @@ public class Shader {
 
 	public void destroy() {
 		glDeleteShader(id);
+		GL.checkError();
 		Log.println(LOW_DEBUG, toString() + " Desctruction Complete");
 	}
 
@@ -42,17 +41,13 @@ public class Shader {
 		return type;
 	}
 
-	public String getPath() {
-		return path;
-	}
-
 	public String getSource() {
 		return source;
 	}
 
 	@Override
 	public String toString() {
-		return "Shader [id=" + id + ", type=" + type + ", path=" + path + "]";
+		return "Shader [id=" + id + ", type=" + type + "]";
 	}
 
 	@Override
@@ -60,7 +55,6 @@ public class Shader {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + id;
-		result = prime * result + ((path == null) ? 0 : path.hashCode());
 		result = prime * result + ((source == null) ? 0 : source.hashCode());
 		result = prime * result + type;
 		return result;
@@ -77,12 +71,7 @@ public class Shader {
 		Shader other = (Shader) obj;
 		if (id != other.id)
 			return false;
-		if (path == null) {
-			if (other.path != null)
-				return false;
-		}
-		else if (!path.equals(other.path))
-			return false;
+
 		if (source == null) {
 			if (other.source != null)
 				return false;

@@ -9,39 +9,41 @@ import org.lwjgl.util.vector.Vector2f;
 
 public class GL {
 
-	private static int currentAvailableAttributeIndex = 0;
-
-	public static synchronized int getNextAvailableAttribIndex() {
-		int index = currentAvailableAttributeIndex;
-		currentAvailableAttributeIndex++;
-		return index;
-	}
-
-	public static void checkError() throws GLException {
+	public static void checkError() {
 		int errorValue = glGetError();
 		if (errorValue != GL_NO_ERROR) {
-			throw new GLException(gluErrorString(errorValue));
+			try {
+				throw new GLException(gluErrorString(errorValue));
+			}
+			catch (GLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
-	public static void checkShaderInfo(int id) throws GLException {
+	public static void checkShaderInfo(int id) {
 		String s = glGetShaderInfoLog(id, 1000);
 		if (!s.isEmpty() && !s.trim().contains("No errors.")) {
-			throw new GLException(s);
+			try {
+				throw new GLException(s);
+			}
+			catch (GLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
 	public static Vector2f glToPixel(Vector2f glCoordinate) {
 		Vector2f windowCoordinates = new Vector2f();
-		windowCoordinates.x = ((1 + glCoordinate.x) / 2) * Display.getWidth();
-		windowCoordinates.y = ((1 + glCoordinate.y) / 2) * Display.getHeight();
+		windowCoordinates.x = ((1.0f + glCoordinate.x) / 2.0f) * (float) Display.getWidth();
+		windowCoordinates.y = ((1.0f + glCoordinate.y) / 2.0f) * (float) Display.getHeight();
 		return windowCoordinates;
 	}
 
 	public static Vector2f pixelToGl(Vector2f windowCoordinate) {
 		Vector2f glCoordinates = new Vector2f();
-		glCoordinates.x = ((windowCoordinate.x / Display.getWidth()) * 2) - 1;
-		glCoordinates.y = ((windowCoordinate.y / Display.getHeight()) * 2) - 1;
+		glCoordinates.x = ((windowCoordinate.x / (float) Display.getWidth()) * 2.0f) - 1.0f;
+		glCoordinates.y = ((windowCoordinate.y / (float) Display.getHeight()) * 2.0f) - 1.0f;
 		return glCoordinates;
 	}
 
@@ -49,8 +51,8 @@ public class GL {
 		Vector2f glDimensions = new Vector2f(dimension);
 
 		Vector2f windowDimensions = new Vector2f();
-		windowDimensions.x = ((1 + glDimensions.x) / 2) * Display.getWidth();
-		windowDimensions.y = ((1 + glDimensions.y) / 2) * Display.getHeight();
+		windowDimensions.x = ((1.0f + glDimensions.x) / 2.0f) * (float) Display.getWidth();
+		windowDimensions.y = ((1.0f + glDimensions.y) / 2.0f) * (float) Display.getHeight();
 
 		return windowDimensions;
 	}
@@ -58,17 +60,17 @@ public class GL {
 	public static Vector2f pixelDimensionsToGlDimension(Vector2f dimension) {
 		Vector2f windowDimensions = new Vector2f(dimension);
 
-		if (windowDimensions.x <= Display.getWidth() / 2) {
-			windowDimensions.x += Display.getWidth() / 2;
+		if (windowDimensions.x <= (float) Display.getWidth() / 2.0f) {
+			windowDimensions.x += (float) Display.getWidth() / 2.0f;
 		}
 
-		if (windowDimensions.y <= Display.getHeight() / 2) {
-			windowDimensions.y += Display.getHeight() / 2;
+		if (windowDimensions.y <= (float) Display.getHeight() / 2.0f) {
+			windowDimensions.y += (float) Display.getHeight() / 2.0f;
 		}
 
 		Vector2f glDimensions = new Vector2f();
-		glDimensions.x = ((windowDimensions.x / Display.getWidth()) * 2) - 1;
-		glDimensions.y = ((windowDimensions.y / Display.getHeight()) * 2) - 1;
+		glDimensions.x = ((windowDimensions.x / (float) Display.getWidth()) * 2.0f) - 1.0f;
+		glDimensions.y = ((windowDimensions.y / (float) Display.getHeight()) * 2.0f) - 1.0f;
 		return glDimensions;
 	}
 
@@ -77,14 +79,14 @@ public class GL {
 	public static Vector2f textureToWindow(Vector2f glCoordinate, Vector2f textureDimension) {
 		Vector2f windowCoordinates = new Vector2f();
 		windowCoordinates.x = glCoordinate.x * textureDimension.x;
-		windowCoordinates.y = Math.abs(-(glCoordinate.y - 1) * textureDimension.y);
+		windowCoordinates.y = Math.abs(-(glCoordinate.y - 1.0f) * textureDimension.y);
 		return windowCoordinates;
 	}
 
 	public static Vector2f windowToTexture(Vector2f windowCoordinate, Vector2f textureDimension) {
 		Vector2f glCoordinates = new Vector2f();
 		glCoordinates.x = windowCoordinate.x / textureDimension.x;
-		glCoordinates.y = -(windowCoordinate.y / textureDimension.y) + 1;
+		glCoordinates.y = -(windowCoordinate.y / textureDimension.y) + 1.0f;
 		return glCoordinates;
 	}
 }

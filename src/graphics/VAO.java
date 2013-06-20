@@ -5,11 +5,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
+import util.GL;
+
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL20.*;
 import static org.lwjgl.opengl.GL30.*;
 
 public class VAO {
+
+	public static final int VERTEX_ATTRIB = 0;
+	public static final int COLOR_ATTRIB = 1;
+	public static final int TEXTURE_ATTRIB = 2;
 
 	public final int MAX_VBO_COUNT = 16;
 
@@ -18,14 +24,17 @@ public class VAO {
 
 	public VAO() {
 		vaoId = glGenVertexArrays();
+		GL.checkError();
 	}
 
 	public void bind() {
 		glBindVertexArray(vaoId);
+		GL.checkError();
 	}
 
 	public void unbind() {
 		glBindVertexArray(0);
+		GL.checkError();
 	}
 
 	public void destroy() {
@@ -49,12 +58,17 @@ public class VAO {
 		if (vbo.isTextured()) {
 			int textureAttribIndex = vertexAttribIndex + 2;
 			glVertexAttribPointer(vertexAttribIndex, TexturedVertex.positionElementCount, GL_FLOAT, false, TexturedVertex.stride, TexturedVertex.positionByteOffset);
+			GL.checkError();
 			glVertexAttribPointer(colorAttribIndex, TexturedVertex.colorElementCount, GL_FLOAT, false, TexturedVertex.stride, TexturedVertex.colorByteOffset);
+			GL.checkError();
 			glVertexAttribPointer(textureAttribIndex, TexturedVertex.textureElementCount, GL_FLOAT, false, TexturedVertex.stride, TexturedVertex.textureByteOffset);
+			GL.checkError();
 		}
 		else {
 			glVertexAttribPointer(vertexAttribIndex, Vertex.positionElementCount, GL_FLOAT, false, Vertex.stride, Vertex.positionByteOffset);
+			GL.checkError();
 			glVertexAttribPointer(colorAttribIndex, Vertex.colorElementCount, GL_FLOAT, false, Vertex.stride, Vertex.colorByteOffset);
+			GL.checkError();
 		}
 		vbo.unbind();
 		unbind();

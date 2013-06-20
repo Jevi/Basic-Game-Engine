@@ -10,7 +10,7 @@ import core.StateBasedGame;
 public class StateOne extends GameState {
 
 	private World world = new World(new Vec2(0, -9.8f));
-	public final float scale = 30.0f;
+	public final float pixelToMeterRatio = 30.0f;
 
 	public StateOne(int id) {
 		super(id);
@@ -25,8 +25,8 @@ public class StateOne extends GameState {
 
 	@Override
 	public void update(int delta) {
-		world.step(1.0f / 60.0f, 5, 5);
 		super.update(delta);
+		world.step(1.0f / 60.0f, 8, 3);
 	}
 
 	@Override

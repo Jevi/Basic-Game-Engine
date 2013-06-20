@@ -48,11 +48,10 @@ public abstract class GameContainer {
 	}
 
 	protected void update(int delta) {
-		updateFPS();
 		game.update(delta);
-
-		Display.update();
 		Display.sync(gameContainerConfig.getSync());
+		Display.update();
+		updateFPS();
 	}
 
 	public long getTime() {

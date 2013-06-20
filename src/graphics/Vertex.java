@@ -75,6 +75,22 @@ public class Vertex {
 
 	// Getters
 
+	public float getX() {
+		return xyzw[0];
+	}
+
+	public float getY() {
+		return xyzw[1];
+	}
+
+	public float getZ() {
+		return xyzw[2];
+	}
+
+	public float getW() {
+		return xyzw[3];
+	}
+
 	public float[] getXY() {
 		return Arrays.copyOf(xyzw, xyzw.length - 2);
 	}

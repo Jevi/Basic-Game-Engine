@@ -41,7 +41,7 @@ public class GameRunner extends GameContainer {
 		Display.create();
 
 		glViewport(0, 0, gameContainerConfig.getWidth(), gameContainerConfig.getHeight());
-		glClearColor(0.4f, 0.6f, 0.9f, 0f);
+		glClearColor(0.4f, 0.6f, 0.8f, 1);
 	}
 
 	public void start() throws LWJGLException {

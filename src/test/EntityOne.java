@@ -9,6 +9,7 @@ import java.io.IOException;
 import graphics.Graphics;
 import graphics.Shader;
 import graphics.ShaderProgram;
+import graphics.VAO;
 import graphics.VBO;
 import graphics.Vertex;
 
@@ -22,7 +23,8 @@ import org.jbox2d.dynamics.FixtureDef;
 import org.lwjgl.util.vector.Vector2f;
 
 import util.GL;
-import util.GLException;
+import util.IO;
+import util.Conversion;
 
 import component.Component;
 import component.Entity;
@@ -33,8 +35,8 @@ import core.GameState;
 public class EntityOne extends Entity {
 
 	private Body body;
-	private final float width = 100;
-	private final float height = 100;
+	private final float hx = 30;
+	private final float hy = 30;
 
 	public EntityOne(String id) {
 		super(id);
@@ -58,18 +60,18 @@ public class EntityOne extends Entity {
 					StateOne state = (StateOne) gameState;
 
 					BodyDef bodyDef = new BodyDef();
-					bodyDef.position.set(gameContainer.getWidth() / state.scale / 2.0f, gameContainer.getHeight() / state.scale / 2.0f);
+					bodyDef.position.set(Conversion.PixelsToMeters(gameContainer.getWidth(), state.pixelToMeterRatio) / 2.0f, Conversion.PixelsToMeters(gameContainer.getHeight(), state.pixelToMeterRatio) / 2.0f);
 					bodyDef.type = BodyType.DYNAMIC;
-					// bodyDef.angle = 45;
+					// bodyDef.angle = (float) Math.toRadians(40);
 
 					PolygonShape polygonShape = new PolygonShape();
-					polygonShape.setAsBox((width / 2.0f) / state.scale, (height / 2.0f) / state.scale);
+					polygonShape.setAsBox(Conversion.PixelsToMeters(hx, state.pixelToMeterRatio), Conversion.PixelsToMeters(hy, state.pixelToMeterRatio));
 
 					body = state.getWorld().createBody(bodyDef);
 
 					FixtureDef fixtureDef = new FixtureDef();
 					fixtureDef.density = 0.1f;
-					fixtureDef.restitution = 0f;
+					fixtureDef.restitution = 0.5f;
 					fixtureDef.shape = polygonShape;
 					body.createFixture(fixtureDef);
 				}
@@ -87,6 +89,7 @@ public class EntityOne extends Entity {
 
 		addComponent(new Component("Render", true) {
 
+			private VAO vao = new VAO();
 			private VBO vbo;
 			private ShaderProgram shaderProgram = new ShaderProgram();
 			private Vertex[] vertices;
@@ -112,16 +115,17 @@ public class EntityOne extends Entity {
 				vertices[3].setRGB(0, 0, 0);
 
 				vbo = new VBO(vertices, GL_QUADS, GL_DYNAMIC_DRAW);
+				vao.addVBO(vbo);
 
 				try {
-					shaderProgram.attachShader(new Shader("shaders/vertex.glsl", GL_VERTEX_SHADER));
-					shaderProgram.attachShader(new Shader("shaders/fragment.glsl", GL_FRAGMENT_SHADER));
+					shaderProgram.attachShader(new Shader(IO.getFileContent("shaders/vertex.glsl"), GL_VERTEX_SHADER));
+					shaderProgram.attachShader(new Shader(IO.getFileContent("shaders/fragment.glsl"), GL_FRAGMENT_SHADER));
 					shaderProgram.bindAttributeLocation("inPosition");
 					shaderProgram.bindAttributeLocation("inColor");
 					shaderProgram.link();
 					shaderProgram.validate();
 				}
-				catch (GLException | IOException e) {
+				catch (IOException e) {
 					e.printStackTrace();
 				}
 
@@ -132,29 +136,38 @@ public class EntityOne extends Entity {
 				updateVertices();
 				vbo.setVertices(vertices);
 
+				Vector2f temp = new Vector2f(position.x, position.y);
+				temp = GL.pixelToGl(temp);
+
+				glPushMatrix();
+				glTranslatef(temp.x, temp.y, 0);
+				glRotated(Math.toDegrees(body.getAngle()), 0, 0, 1);
+				glTranslatef(-temp.x, -temp.y, 0);
 				Graphics.render(vbo);
+				glPopMatrix();
 			}
 
 			@Override
 			public void destroy() {
 				vbo.destroy();
+				vao.destroy();
 				shaderProgram.destroy();
 			}
 
 			private void updateVertices() {
 				if (gameState instanceof StateOne) {
 					StateOne state = (StateOne) gameState;
-					position = body.getPosition().mul(state.scale);
-				}
+					position = body.getPosition().mul(state.pixelToMeterRatio);
 
-				// top left
-				vertices[0].setXY(GL.pixelToGl(new Vector2f(position.x - width / 2.0f, position.y + height / 2.0f)));
-				// top right
-				vertices[1].setXY(GL.pixelToGl(new Vector2f(position.x + width / 2.0f, position.y + height / 2.0f)));
-				// bottom right
-				vertices[2].setXY(GL.pixelToGl(new Vector2f(position.x + width / 2.0f, position.y - height / 2.0f)));
-				// bottom left
-				vertices[3].setXY(GL.pixelToGl(new Vector2f(position.x - width / 2.0f, position.y - height / 2.0f)));
+					// top left
+					vertices[0].setXY(GL.pixelToGl(new Vector2f(position.x - hx, position.y + hy)));
+					// top right
+					vertices[1].setXY(GL.pixelToGl(new Vector2f(position.x + hx, position.y + hy)));
+					// bottom right
+					vertices[2].setXY(GL.pixelToGl(new Vector2f(position.x + hx, position.y - hy)));
+					// bottom left
+					vertices[3].setXY(GL.pixelToGl(new Vector2f(position.x - hx, position.y - hy)));
+				}
 			}
 		});
 	}

@@ -23,8 +23,6 @@ public class VBO {
 	private int mode;
 	private int usage;
 
-	private int vertexAttribIndex;
-
 	private boolean isTextured = false;
 
 	public VBO(Vertex[] vertices, int mode, int usage) {
@@ -63,19 +61,25 @@ public class VBO {
 
 		bind();
 		glBufferData(GL_ARRAY_BUFFER, vertexData, usage);
+		GL.checkError();
 
-		vertexAttribIndex = GL.getNextAvailableAttribIndex();
+		int vertexAttribIndex = 0;
 		int colorAttribIndex = vertexAttribIndex + 1;
 
 		if (this.isTextured()) {
 			int textureAttribIndex = vertexAttribIndex + 2;
 			glVertexAttribPointer(vertexAttribIndex, TexturedVertex.positionElementCount, GL_FLOAT, false, TexturedVertex.stride, TexturedVertex.positionByteOffset);
+			GL.checkError();
 			glVertexAttribPointer(colorAttribIndex, TexturedVertex.colorElementCount, GL_FLOAT, false, TexturedVertex.stride, TexturedVertex.colorByteOffset);
+			GL.checkError();
 			glVertexAttribPointer(textureAttribIndex, TexturedVertex.textureElementCount, GL_FLOAT, false, TexturedVertex.stride, TexturedVertex.textureByteOffset);
+			GL.checkError();
 		}
 		else {
 			glVertexAttribPointer(vertexAttribIndex, Vertex.positionElementCount, GL_FLOAT, false, Vertex.stride, Vertex.positionByteOffset);
+			GL.checkError();
 			glVertexAttribPointer(colorAttribIndex, Vertex.colorElementCount, GL_FLOAT, false, Vertex.stride, Vertex.colorByteOffset);
+			GL.checkError();
 		}
 		unbind();
 	}
@@ -95,6 +99,7 @@ public class VBO {
 
 		bind();
 		glBufferSubData(GL_ARRAY_BUFFER, 0, vertexData);
+		GL.checkError();
 		unbind();
 	}
 
@@ -108,6 +113,7 @@ public class VBO {
 
 	public void destroy() {
 		glDeleteBuffers(id);
+		GL.checkError();
 		vertices = null;
 		vertexData = null;
 	}
@@ -132,10 +138,6 @@ public class VBO {
 
 	public int getUsage() {
 		return usage;
-	}
-
-	public int getVertexAttribIndex() {
-		return vertexAttribIndex;
 	}
 
 	public boolean isTextured() {
