@@ -11,8 +11,8 @@ public class GameContainerConfig {
 	private boolean isFullScreen;
 
 	public GameContainerConfig() {
-		width = 800;
-		height = 600;
+		width = 1280;
+		height = 720;
 		sync = -1;
 		isVSyncEnabled = false;
 		isResizable = false;

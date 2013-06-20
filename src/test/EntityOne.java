@@ -22,7 +22,6 @@ import org.jbox2d.dynamics.FixtureDef;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import util.GL;
 import util.IO;
 import util.Conversion;
 
@@ -60,9 +59,9 @@ public class EntityOne extends Entity {
 					StateOne state = (StateOne) gameState;
 
 					BodyDef bodyDef = new BodyDef();
-					bodyDef.position.set(Conversion.PixelsToMeters(gameContainer.getWidth(), state.pixelToMeterRatio) / 2.0f, Conversion.PixelsToMeters(gameContainer.getHeight(), state.pixelToMeterRatio) / 2.0f);
+					bodyDef.position.set(Conversion.PixelsToMeters(gameContainer.getWidth(), state.pixelToMeterRatio) / 2.0f, Conversion.PixelsToMeters(gameContainer.getHeight(), state.pixelToMeterRatio));
 					bodyDef.type = BodyType.DYNAMIC;
-					// bodyDef.angle = (float) Math.toRadians(40);
+					bodyDef.angle = (float) Math.toRadians(0);
 
 					PolygonShape polygonShape = new PolygonShape();
 					polygonShape.setAsBox(Conversion.PixelsToMeters(hx, state.pixelToMeterRatio), Conversion.PixelsToMeters(hy, state.pixelToMeterRatio));
@@ -71,7 +70,6 @@ public class EntityOne extends Entity {
 
 					FixtureDef fixtureDef = new FixtureDef();
 					fixtureDef.density = 0.1f;
-					fixtureDef.restitution = 0.5f;
 					fixtureDef.shape = polygonShape;
 					body.createFixture(fixtureDef);
 				}
@@ -103,16 +101,16 @@ public class EntityOne extends Entity {
 					vertices[i] = new Vertex();
 				}
 
-				updateVertices();
-
 				// top left
 				vertices[0].setRGB(1, 0, 0);
-				// top right
+				// top right (1, 0, 1);
 				vertices[1].setRGB(0, 1, 0);
-				// bottom right
+				// bottom right (1, 0, 1);
 				vertices[2].setRGB(0, 0, 1);
-				// bottom left
+				// bottom left (1, 0, 1);
 				vertices[3].setRGB(0, 0, 0);
+
+				updateVertices();
 
 				vbo = new VBO(vertices, GL_QUADS, GL_DYNAMIC_DRAW);
 				vao.addVBO(vbo);
@@ -136,15 +134,13 @@ public class EntityOne extends Entity {
 				updateVertices();
 				vbo.setVertices(vertices);
 
-				Vector2f temp = new Vector2f(position.x, position.y);
-				temp = GL.pixelToGl(temp);
-
 				glPushMatrix();
-				glTranslatef(temp.x, temp.y, 0);
+				glTranslatef(position.x, position.y, 0);
 				glRotated(Math.toDegrees(body.getAngle()), 0, 0, 1);
-				glTranslatef(-temp.x, -temp.y, 0);
+				glTranslatef(-position.x, -position.y, 0);
 				Graphics.render(vbo);
 				glPopMatrix();
+
 			}
 
 			@Override
@@ -160,13 +156,13 @@ public class EntityOne extends Entity {
 					position = body.getPosition().mul(state.pixelToMeterRatio);
 
 					// top left
-					vertices[0].setXY(GL.pixelToGl(new Vector2f(position.x - hx, position.y + hy)));
+					vertices[0].setXY(new Vector2f(position.x - hx, position.y + hy));
 					// top right
-					vertices[1].setXY(GL.pixelToGl(new Vector2f(position.x + hx, position.y + hy)));
+					vertices[1].setXY(new Vector2f(position.x + hx, position.y + hy));
 					// bottom right
-					vertices[2].setXY(GL.pixelToGl(new Vector2f(position.x + hx, position.y - hy)));
+					vertices[2].setXY(new Vector2f(position.x + hx, position.y - hy));
 					// bottom left
-					vertices[3].setXY(GL.pixelToGl(new Vector2f(position.x - hx, position.y - hy)));
+					vertices[3].setXY(new Vector2f(position.x - hx, position.y - hy));
 				}
 			}
 		});

@@ -4,9 +4,6 @@ import java.io.IOException;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import util.GL;
-import util.GLException;
-
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL15.*;
@@ -17,23 +14,19 @@ public class Sprite {
 	private Texture texture;
 
 	private TexturedVertex[] vertices;
-	private Vector2f position = new Vector2f(0.0f, 0.0f);
-	private Vector2f dimension = new Vector2f(0.1f, 0.1f);
+	private Vector2f position;
+	private Vector2f dimension;
 
 	private Vector2f low = new Vector2f(0f, 0f);
 	private Vector2f high = new Vector2f(1f, 1f);
 
-	public Sprite(String path) throws GLException, IOException {
+	public Sprite(String path, Vector2f position, Vector2f dimension) throws IOException {
+		this.position = new Vector2f(position);
+		this.dimension = new Vector2f(dimension);
 		init(path);
 	}
 
-	public Sprite(String path, Vector2f position, Vector2f dimension) throws GLException, IOException {
-		this.position = GL.pixelToGl(position);
-		this.dimension = GL.pixelDimensionsToGlDimension(dimension);
-		init(path);
-	}
-
-	private void init(String path) throws GLException, IOException {
+	private void init(String path) throws IOException {
 		texture = new Texture(path, GL_TEXTURE0);
 		load();
 
@@ -77,20 +70,20 @@ public class Sprite {
 	}
 
 	public Vector2f getPosition() {
-		return GL.glToPixel(position);
+		return new Vector2f(position);
 	}
 
 	public void setPosition(Vector2f position) {
-		this.position = GL.pixelToGl(position);
+		this.position = new Vector2f(position);
 		updateData();
 	}
 
 	public Vector2f getDimension() {
-		return GL.glDimensionsToPixelDimensions(dimension);
+		return new Vector2f(dimension);
 	}
 
 	public void setDimension(Vector2f dimension) {
-		this.dimension = GL.pixelDimensionsToGlDimension(dimension);
+		this.dimension = new Vector2f(dimension);
 		updateData();
 	}
 }

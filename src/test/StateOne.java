@@ -26,7 +26,7 @@ public class StateOne extends GameState {
 	@Override
 	public void update(int delta) {
 		super.update(delta);
-		world.step(1.0f / 60.0f, 8, 3);
+		world.step(1 / 60f, 8, 3);
 	}
 
 	@Override

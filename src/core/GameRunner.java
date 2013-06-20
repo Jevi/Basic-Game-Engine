@@ -40,7 +40,7 @@ public class GameRunner extends GameContainer {
 		Display.setVSyncEnabled(gameContainerConfig.isVSyncEnabled());
 		Display.create();
 
-		glViewport(0, 0, gameContainerConfig.getWidth(), gameContainerConfig.getHeight());
+		glOrtho(0, gameContainerConfig.getWidth(), 0, gameContainerConfig.getHeight(), 1, -1);
 		glClearColor(0.4f, 0.6f, 0.8f, 1);
 	}
 

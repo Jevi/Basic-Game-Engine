@@ -8,9 +8,6 @@ import java.io.IOException;
 
 import org.lwjgl.util.vector.Vector2f;
 
-import util.GL;
-import util.GLException;
-
 public class SpriteSheet {
 
 	private VBO vbo;
@@ -19,8 +16,8 @@ public class SpriteSheet {
 	private TexturedVertex[] vertices;
 
 	// sprite position and dimension on screen
-	private Vector2f position = new Vector2f(0.0f, 0.0f); // gl
-	private Vector2f dimension = new Vector2f(0.5f, 0.5f); // gl
+	private Vector2f position;
+	private Vector2f dimension;
 
 	// define subimage of spritesheet
 	private Vector2f low = new Vector2f(0f, 0f); // gl
@@ -33,20 +30,14 @@ public class SpriteSheet {
 
 	private Vector2f frameDimensions; // gl
 
-	public SpriteSheet(String path, Vector2f spriteDimensions) throws GLException, IOException {
-		this.spriteDimension = new Vector2f(spriteDimensions);
-		this.dimension = GL.pixelDimensionsToGlDimension(spriteDimensions);
-		init(path);
-	}
-
-	public SpriteSheet(String path, Vector2f spriteDimensions, Vector2f position, Vector2f dimension) throws GLException, IOException {
-		this.position = GL.pixelToGl(position);
-		this.dimension = GL.pixelDimensionsToGlDimension(dimension);
+	public SpriteSheet(String path, Vector2f spriteDimensions, Vector2f position, Vector2f dimension) throws IOException {
+		this.position = new Vector2f(position);
+		this.dimension = new Vector2f(dimension);
 		this.spriteDimension = new Vector2f(spriteDimensions);
 		init(path);
 	}
 
-	private void init(String path) throws GLException, IOException {
+	private void init(String path) throws IOException {
 		texture = new Texture(path, GL_TEXTURE0);
 		texture.load();
 
@@ -104,20 +95,20 @@ public class SpriteSheet {
 	}
 
 	public Vector2f getPosition() {
-		return GL.glToPixel(position);
+		return new Vector2f(position);
 	}
 
 	public void setPosition(Vector2f position) {
-		this.position = GL.pixelToGl(position);
+		this.position = new Vector2f(position);
 		updateData();
 	}
 
 	public Vector2f getDimension() {
-		return GL.glDimensionsToPixelDimensions(dimension);
+		return new Vector2f(dimension);
 	}
 
 	public void setDimension(Vector2f dimension) {
-		this.dimension = GL.pixelDimensionsToGlDimension(dimension);
+		this.dimension = new Vector2f(dimension);
 		updateData();
 	}
 
