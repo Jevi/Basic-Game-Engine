@@ -1,4 +1,4 @@
-package test.PongGame;
+package test.pong;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -17,7 +17,7 @@ import util.Conversion;
 import component.Component;
 import component.Entity;
 
-import core.PhysicsGameState;
+import core.util.PhysicsAppState;
 
 public class PongPlayer extends Entity {
 
@@ -48,8 +48,8 @@ public class PongPlayer extends Entity {
 			public void init(Entity entity) {
 				super.init(entity);
 
-				if (gameState instanceof PhysicsGameState) {
-					PhysicsGameState state = (PhysicsGameState) gameState;
+				if (gameState instanceof PhysicsAppState) {
+					PhysicsAppState state = (PhysicsAppState) gameState;
 
 					pixelToMeterRatio = state.getPixelToMeterRatio();
 					BodyDef bodyDef = new BodyDef();

@@ -43,7 +43,7 @@ public class BitmapFont {
 					xoffset = 0;
 				}
 
-				if (character != ' ' && character != '\n') {
+				if (character != ' ' && character != '\n' && character != '\t') {
 					SpriteSheet spriteSheet = new SpriteSheet(fonTexture, characterDimension, new Vector2f(position.x + ((characterDimension.x - characterDimension.x / 2) * xoffset), position.y - (characterDimension.y * yoffset)), new Vector2f(
 							fontSize, fontSize));
 					spriteSheet.setFrame(character);
@@ -51,7 +51,12 @@ public class BitmapFont {
 				}
 
 				if (character != '\n') {
-					xoffset++;
+					if (character == '\t') {
+						xoffset += 3;
+					}
+					else {
+						xoffset++;
+					}
 				}
 			}
 		}

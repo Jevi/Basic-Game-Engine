@@ -1,6 +1,8 @@
 package core;
 
-public class GameContainerConfig {
+import org.lwjgl.util.Color;
+
+public class AppContainerConfig {
 
 	// properties
 	private int width;
@@ -9,14 +11,18 @@ public class GameContainerConfig {
 	private boolean isVSyncEnabled;
 	private boolean isResizable;
 	private boolean isFullScreen;
+	private String lwjglLibraryPath;
+	private Color backgroundColor;
 
-	public GameContainerConfig() {
+	public AppContainerConfig() {
 		width = 800;
 		height = 600;
 		sync = -1;
 		isVSyncEnabled = false;
 		isResizable = false;
 		isFullScreen = false;
+		lwjglLibraryPath = "lib/native/windows";
+		backgroundColor = new Color(Color.BLACK);
 	}
 
 	public int getWidth() {
@@ -67,9 +73,20 @@ public class GameContainerConfig {
 		this.isFullScreen = isFullScreen;
 	}
 
-	@Override
-	public String toString() {
-		return "GameContainerConfig [width=" + width + ", height=" + height + ", sync=" + sync + ", isVSyncEnabled=" + isVSyncEnabled + ", isResizable=" + isResizable + ", isFullScreen=" + isFullScreen + "]";
+	public String getLwjglLibraryPath() {
+		return lwjglLibraryPath;
+	}
+
+	public void setLwjglLibraryPath(String lwjglLibraryPath) {
+		this.lwjglLibraryPath = lwjglLibraryPath;
+	}
+
+	public Color getBackgroundColor() {
+		return backgroundColor;
+	}
+
+	public void setBackgroundColor(Color backgroundColor) {
+		this.backgroundColor = backgroundColor;
 	}
 
 }

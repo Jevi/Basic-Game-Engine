@@ -1,4 +1,4 @@
-package test.PongGame;
+package test.pong;
 
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
@@ -12,7 +12,7 @@ import util.Conversion;
 import component.Component;
 import component.Entity;
 
-import core.PhysicsGameState;
+import core.util.PhysicsAppState;
 
 public class PongWall extends Entity {
 
@@ -37,8 +37,8 @@ public class PongWall extends Entity {
 			public void init(Entity entity) {
 				super.init(entity);
 
-				if (gameState instanceof PhysicsGameState) {
-					PhysicsGameState state = (PhysicsGameState) gameState;
+				if (gameState instanceof PhysicsAppState) {
+					PhysicsAppState state = (PhysicsAppState) gameState;
 
 					BodyDef bodyDef = new BodyDef();
 					bodyDef.position.set(Conversion.PixelsToMeters(position.x, state.getPixelToMeterRatio()), Conversion.PixelsToMeters(position.y, state.getPixelToMeterRatio()));

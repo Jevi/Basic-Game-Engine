@@ -1,7 +1,6 @@
-package test.PongGame;
+package test.pong;
 
 import static org.lwjgl.opengl.GL11.*;
-
 import gfx.BitmapFont;
 
 import java.io.IOException;
@@ -12,14 +11,12 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.util.vector.Vector2f;
 
 import util.Conversion;
+import core.AppContainer;
+import core.AppContext;
+import core.StateBasedApp;
+import core.util.PhysicsAppState;
 
-import core.AudioManager;
-import core.GameContainer;
-import core.PhysicsGameState;
-import core.StateBasedGame;
-import core.TextureManager;
-
-public class PongPlayState extends PhysicsGameState {
+public class PongPlayState extends PhysicsAppState {
 
 	private final int scoreLimit = 5;
 
@@ -27,15 +24,14 @@ public class PongPlayState extends PhysicsGameState {
 	private int playerTwoScore = 0;
 	private boolean playerOneScoredLast = false;
 
-	private BitmapFont playerOneScoreText;
-	private BitmapFont playerTwoScoreText;
+	private BitmapFont scoreBoard;
 
 	public PongPlayState(int id, Vec2 gravity, int pixelToMeterRatio) {
 		super(id, gravity, pixelToMeterRatio);
 	}
 
 	@Override
-	public void init(GameContainer gameContainer, StateBasedGame game) {
+	public void init(AppContainer gameContainer, StateBasedApp game) {
 		addEntity(new PongWall("TopWall", new Vec2(gameContainer.getWidth() / 2, 1), new Vec2(gameContainer.getWidth() / 2, gameContainer.getHeight() + 1)));
 		addEntity(new PongWall("BottomWall", new Vec2(gameContainer.getWidth() / 2, 1), new Vec2(gameContainer.getWidth() / 2, 0 - 1)));
 
@@ -45,13 +41,9 @@ public class PongPlayState extends PhysicsGameState {
 		addEntity(new PongBall("PongBall"));
 
 		try {
-			playerOneScoreText = new BitmapFont(TextureManager.getTexture("Consolas"), new Vector2f(32, 32));
-			playerOneScoreText.setPosition(new Vector2f(gameContainer.getWidth() / 3, gameContainer.getHeight() - (gameContainer.getHeight() / 25)));
-			playerOneScoreText.setFontSize(14);
-
-			playerTwoScoreText = new BitmapFont(TextureManager.getTexture("Consolas"), new Vector2f(32, 32));
-			playerTwoScoreText.setPosition(new Vector2f((gameContainer.getWidth() / 2) + (gameContainer.getWidth() / 25), gameContainer.getHeight() - (gameContainer.getHeight() / 25)));
-			playerTwoScoreText.setFontSize(14);
+			scoreBoard = new BitmapFont(AppContext.textureManager.get("Consolas"), new Vector2f(32, 32));
+			scoreBoard.setPosition(new Vector2f(gameContainer.getWidth() / 3, gameContainer.getHeight() - (gameContainer.getHeight() / 25)));
+			scoreBoard.setFontSize(14);
 		}
 		catch (IOException e) {
 			e.printStackTrace();
@@ -70,7 +62,6 @@ public class PongPlayState extends PhysicsGameState {
 	@Override
 	public void update(int delta) {
 		super.update(delta);
-		input();
 		checkScore();
 	}
 
@@ -100,7 +91,7 @@ public class PongPlayState extends PhysicsGameState {
 		pongBall.reset();
 		player1.reset();
 		player2.reset();
-		AudioManager.getAudio("Score").play();
+		AppContext.audioManager.get("Score").play();
 
 		if (playerOneScore == scoreLimit || playerTwoScore == scoreLimit) {
 			playerOneScore = 0;
@@ -119,13 +110,14 @@ public class PongPlayState extends PhysicsGameState {
 		glVertex2f(gameContainer.getWidth() / 2.0f, 0);
 		glEnd();
 
-		playerOneScoreText.renderText("Player 1: " + Integer.toString(playerOneScore));
-		playerTwoScoreText.renderText("Player 2: " + Integer.toString(playerTwoScore));
+		scoreBoard.renderText(String.format("Player 1: %s\t\tPlayer 2: %s", Integer.toString(playerOneScore), Integer.toString(playerTwoScore)));
 	}
 
-	private void input() {
-		if (Keyboard.isKeyDown(Keyboard.KEY_P)) {
-			serve();
+	public void input() {
+		if (!Keyboard.getEventKeyState()) {
+			if (Keyboard.getEventKey() == Keyboard.KEY_P) {
+				serve();
+			}
 		}
 	}
 
@@ -156,6 +148,9 @@ public class PongPlayState extends PhysicsGameState {
 			direction.y = 1;
 		}
 
-		pongBall.getBody().setLinearVelocity(new Vec2(((random.nextFloat() * 10f) + 3f) * direction.x, ((random.nextFloat() * 10f) + 3f) * direction.y));
+		int factor = 10;
+		int min = 5;
+
+		pongBall.getBody().setLinearVelocity(new Vec2(((random.nextFloat() * factor) + min) * direction.x, ((random.nextFloat() * factor) + min) * direction.y));
 	}
 }

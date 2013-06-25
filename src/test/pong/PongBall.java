@@ -1,4 +1,4 @@
-package test.PongGame;
+package test.pong;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -14,9 +14,9 @@ import util.Conversion;
 import component.Component;
 import component.Entity;
 
-import core.GameContainer;
-import core.GameState;
-import core.PhysicsGameState;
+import core.AppContainer;
+import core.AppState;
+import core.util.PhysicsAppState;
 
 public class PongBall extends Entity {
 
@@ -30,7 +30,7 @@ public class PongBall extends Entity {
 	}
 
 	@Override
-	public void init(GameContainer gameContainer, GameState gameState) {
+	public void init(AppContainer gameContainer, AppState gameState) {
 		super.init(gameContainer, gameState);
 	}
 
@@ -43,8 +43,8 @@ public class PongBall extends Entity {
 			public void init(Entity entity) {
 				super.init(entity);
 
-				if (gameState instanceof PhysicsGameState) {
-					PhysicsGameState state = (PhysicsGameState) gameState;
+				if (gameState instanceof PhysicsAppState) {
+					PhysicsAppState state = (PhysicsAppState) gameState;
 					pixelToMeterRatio = state.getPixelToMeterRatio();
 					startingPosition = new Vec2(Conversion.PixelsToMeters(gameContainer.getWidth(), pixelToMeterRatio) / 2.0f, Conversion.PixelsToMeters(gameContainer.getHeight(), pixelToMeterRatio) / 2.0f);
 

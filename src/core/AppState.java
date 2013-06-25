@@ -10,18 +10,18 @@ import component.Entity;
 
 import junit.framework.Assert;
 
-public abstract class GameState {
+public abstract class AppState {
 
 	private int id;
-	protected GameContainer gameContainer;
-	protected StateBasedGame game;
+	protected AppContainer gameContainer;
+	protected StateBasedApp game;
 	protected Map<String, Entity> idToEntityMap = new HashMap<String, Entity>();
 
-	public GameState(int id) {
+	public AppState(int id) {
 		this.id = id;
 	}
 
-	public void init(GameContainer gameContainer, StateBasedGame game) {
+	public void init(AppContainer gameContainer, StateBasedApp game) {
 		Assert.assertNotNull(gameContainer);
 		Assert.assertNotNull(game);
 
@@ -48,6 +48,8 @@ public abstract class GameState {
 			entity.update(delta);
 		}
 	}
+
+	public abstract void input();
 
 	public abstract void render();
 

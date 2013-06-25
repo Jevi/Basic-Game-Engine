@@ -9,21 +9,21 @@ import static util.DebugLevel.*;
 
 import junit.framework.Assert;
 
-import core.GameContainer;
-import core.GameState;
+import core.AppContainer;
+import core.AppState;
 
 public abstract class Entity {
 
 	private String id;
-	protected GameContainer gameContainer;
-	protected GameState gameState;
+	protected AppContainer gameContainer;
+	protected AppState gameState;
 	private Set<Component> components = new LinkedHashSet<Component>();
 
 	public Entity(String id) {
 		this.id = id;
 	}
 
-	public void init(GameContainer gameContainer, GameState gameState) {
+	public void init(AppContainer gameContainer, AppState gameState) {
 		Assert.assertNotNull(gameContainer);
 		Assert.assertNotNull(gameState);
 

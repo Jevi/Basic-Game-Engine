@@ -1,15 +1,17 @@
-package core;
+package core.util;
 
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.World;
 
-public abstract class PhysicsGameState extends GameState {
+import core.AppState;
+
+public abstract class PhysicsAppState extends AppState {
 
 	protected World world;
 	protected float pixelToMeterRatio;
 	private int worldStep = 0;
 
-	public PhysicsGameState(int id, Vec2 gravity, int pixelToMeterRatio) {
+	public PhysicsAppState(int id, Vec2 gravity, int pixelToMeterRatio) {
 		super(id);
 		world = new World(gravity);
 		this.pixelToMeterRatio = pixelToMeterRatio;

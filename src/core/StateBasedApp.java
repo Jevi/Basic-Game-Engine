@@ -9,22 +9,27 @@ import static util.DebugLevel.*;
 
 import junit.framework.Assert;
 
-public abstract class StateBasedGame extends Game {
+public abstract class StateBasedApp extends App {
 
-	protected Map<Integer, GameState> idToGameStateMap = new HashMap<Integer, GameState>();
+	protected Map<Integer, AppState> idToGameStateMap = new HashMap<Integer, AppState>();
+	public static final int reservedId = 1337;
 
-	public StateBasedGame(String title) {
+	public StateBasedApp(String title) {
 		super(title);
 
-		gameState = new GameState(-1) {
+		gameState = new AppState(reservedId) {
 			@Override
 			public void render() {
+			}
+
+			@Override
+			public void input() {
 			}
 		};
 	}
 
 	@Override
-	public void init(GameContainer gameContainer) {
+	public void init(AppContainer gameContainer) {
 		this.gameContainer = gameContainer;
 		initGameStates();
 
@@ -35,7 +40,7 @@ public abstract class StateBasedGame extends Game {
 
 	@Override
 	public void destroy() {
-		for (Entry<Integer, GameState> idToGameEntry : idToGameStateMap.entrySet()) {
+		for (Entry<Integer, AppState> idToGameEntry : idToGameStateMap.entrySet()) {
 			idToGameEntry.getValue().destroy();
 		}
 
@@ -48,15 +53,20 @@ public abstract class StateBasedGame extends Game {
 		gameState.render();
 	}
 
+	@Override
+	public void input() {
+		gameState.input();
+	}
+
 	public int getCurrentStateID() {
 		return gameState.getID();
 	}
 
-	public void addGameState(GameState gameState) {
+	public void addGameState(AppState gameState) {
 		Assert.assertNotNull(gameState);
 
 		idToGameStateMap.put(new Integer(gameState.getID()), gameState);
-		if (this.gameState == null) {
+		if (this.gameState.getID() == reservedId && gameState.getID() != reservedId) {
 			this.gameState = gameState;
 			this.gameState.init(gameContainer, this);
 		}
@@ -64,7 +74,7 @@ public abstract class StateBasedGame extends Game {
 	}
 
 	public boolean removeGameState(int id) {
-		GameState gameState = idToGameStateMap.get(new Integer(id));
+		AppState gameState = idToGameStateMap.get(new Integer(id));
 
 		if (id != gameState.getID() && gameState != null) {
 			idToGameStateMap.remove(gameState);

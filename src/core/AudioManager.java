@@ -10,40 +10,52 @@ import java.util.Map;
 import org.apache.commons.io.FilenameUtils;
 
 import util.Log;
-
 import audio.Audio;
 
-public class AudioManager {
+public class AudioManager implements Manager<Audio> {
 
-	private static Map<String, Audio> idToAudioMap = new HashMap<String, Audio>();
+	private Map<String, Audio> idToAudioMap = new HashMap<String, Audio>();
 
-	public static void loadAudio(String path) throws FileNotFoundException {
-		Audio audio = new Audio(path);
+	public AudioManager() {
+	}
+
+	@Override
+	public boolean register(String path) {
 		String id = FilenameUtils.removeExtension(new File(path).getName());
-
+		Audio audio = null;
+		try {
+			audio = new Audio(path);
+		}
+		catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return false;
+		}
 		idToAudioMap.put(id, audio);
-
 		Log.println(LOW_DEBUG, id + " Audio Loaded Successfully");
+		return true;
 	}
 
-	public static Audio getAudio(String id) {
-		return idToAudioMap.get(id);
-	}
-
-	public static void destroyTexture(String id) {
+	@Override
+	public boolean drop(String id) {
 		Audio audio = idToAudioMap.remove(id);
 
 		if (audio != null) {
 			audio.destroy();
 			Log.println(LOW_DEBUG, id + " Audio Destroyed Successfully");
+			return true;
 		}
+		return false;
 	}
 
-	public static void destroyAllAudio() {
+	@Override
+	public void dropAll() {
 		for (Audio audio : idToAudioMap.values()) {
 			audio.destroy();
 		}
+	}
 
-		idToAudioMap.clear();
+	@Override
+	public Audio get(String id) {
+		return idToAudioMap.get(id);
 	}
 }

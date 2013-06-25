@@ -1,16 +1,16 @@
 package core;
 
-public abstract class Game {
+public abstract class App {
 
 	private String title;
-	protected GameContainer gameContainer;
-	protected GameState gameState;
+	protected AppContainer gameContainer;
+	protected AppState gameState;
 
-	public Game(String title) {
+	public App(String title) {
 		this.title = title;
 	}
 
-	public void init(GameContainer gameContainer) {
+	public void init(AppContainer gameContainer) {
 		this.gameContainer = gameContainer;
 	}
 
@@ -20,6 +20,8 @@ public abstract class Game {
 		gameState.update(delta);
 		gameState.render();
 	}
+
+	public abstract void input();
 
 	public String getTitle() {
 		return title;
