@@ -10,11 +10,16 @@ public abstract class Game {
 		this.title = title;
 	}
 
-	public abstract void init(GameContainer gameContainer);
+	public void init(GameContainer gameContainer) {
+		this.gameContainer = gameContainer;
+	}
 
 	public abstract void destroy();
 
-	public abstract void update(int delta);
+	public void update(int delta) {
+		gameState.update(delta);
+		gameState.render();
+	}
 
 	public String getTitle() {
 		return title;

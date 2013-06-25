@@ -1,7 +1,7 @@
 package core;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
 
 import util.Log;
 import static util.DebugLevel.*;
@@ -14,21 +14,21 @@ public abstract class GameState {
 
 	private int id;
 	protected GameContainer gameContainer;
-	protected StateBasedGame stateBasedGame;
-	protected Set<Entity> entities = new HashSet<Entity>();
+	protected StateBasedGame game;
+	protected Map<String, Entity> idToEntityMap = new HashMap<String, Entity>();
 
 	public GameState(int id) {
 		this.id = id;
 	}
 
-	public void init(GameContainer gameContainer, StateBasedGame stateBasedGame) {
+	public void init(GameContainer gameContainer, StateBasedGame game) {
 		Assert.assertNotNull(gameContainer);
-		Assert.assertNotNull(stateBasedGame);
+		Assert.assertNotNull(game);
 
 		this.gameContainer = gameContainer;
-		this.stateBasedGame = stateBasedGame;
+		this.game = game;
 
-		for (Entity entity : entities) {
+		for (Entity entity : idToEntityMap.values()) {
 			entity.init(this.gameContainer, this);
 		}
 
@@ -36,7 +36,7 @@ public abstract class GameState {
 	}
 
 	public void destroy() {
-		for (Entity entity : entities) {
+		for (Entity entity : idToEntityMap.values()) {
 			entity.destroy();
 		}
 
@@ -44,16 +44,20 @@ public abstract class GameState {
 	}
 
 	public void update(int delta) {
-		for (Entity entity : entities) {
+		for (Entity entity : idToEntityMap.values()) {
 			entity.update(delta);
 		}
 	}
 
 	public abstract void render();
 
-	public boolean addEntity(Entity entity) {
+	public void addEntity(Entity entity) {
 		Assert.assertNotNull(entity);
-		return entities.add(entity);
+		idToEntityMap.put(entity.getId(), entity);
+	}
+
+	public Entity getEntity(String id) {
+		return idToEntityMap.get(id);
 	}
 
 	public int getID() {

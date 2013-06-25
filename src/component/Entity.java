@@ -32,9 +32,7 @@ public abstract class Entity {
 
 		createComponents();
 		for (Component component : components) {
-			if (component.isEnabled()) {
-				component.init(this);
-			}
+			component.init(this);
 		}
 
 		Log.println(LOW_DEBUG, toString() + " Initialization Complete");

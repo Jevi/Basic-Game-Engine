@@ -1,0 +1,179 @@
+[
+
+{
+	"filename": "Back0.png",
+	"frame": {"x":2,"y":2,"w":32,"h":66},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":66},
+	"sourceSize": {"w":32,"h":66}
+},
+{
+	"filename": "Front0.png",
+	"frame": {"x":36,"y":2,"w":32,"h":70},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":70},
+	"sourceSize": {"w":32,"h":70}
+},
+{
+	"filename": "Left0.png",
+	"frame": {"x":70,"y":2,"w":28,"h":68},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":28,"h":68},
+	"sourceSize": {"w":28,"h":68}
+},
+{
+	"filename": "WalkBack0.png",
+	"frame": {"x":100,"y":2,"w":36,"h":70},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":70},
+	"sourceSize": {"w":36,"h":70}
+},
+{
+	"filename": "WalkBack1.png",
+	"frame": {"x":138,"y":2,"w":36,"h":70},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":70},
+	"sourceSize": {"w":36,"h":70}
+},
+{
+	"filename": "WalkBack2.png",
+	"frame": {"x":176,"y":2,"w":36,"h":70},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":70},
+	"sourceSize": {"w":36,"h":70}
+},
+{
+	"filename": "WalkBack3.png",
+	"frame": {"x":214,"y":2,"w":36,"h":70},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":70},
+	"sourceSize": {"w":36,"h":70}
+},
+{
+	"filename": "WalkBack4.png",
+	"frame": {"x":2,"y":74,"w":36,"h":70},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":70},
+	"sourceSize": {"w":36,"h":70}
+},
+{
+	"filename": "WalkBack5.png",
+	"frame": {"x":40,"y":74,"w":36,"h":70},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":36,"h":70},
+	"sourceSize": {"w":36,"h":70}
+},
+{
+	"filename": "WalkFront0.png",
+	"frame": {"x":78,"y":74,"w":40,"h":70},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":70},
+	"sourceSize": {"w":40,"h":70}
+},
+{
+	"filename": "WalkFront1.png",
+	"frame": {"x":120,"y":74,"w":40,"h":70},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":70},
+	"sourceSize": {"w":40,"h":70}
+},
+{
+	"filename": "WalkFront2.png",
+	"frame": {"x":162,"y":74,"w":40,"h":70},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":70},
+	"sourceSize": {"w":40,"h":70}
+},
+{
+	"filename": "WalkFront3.png",
+	"frame": {"x":204,"y":74,"w":40,"h":70},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":70},
+	"sourceSize": {"w":40,"h":70}
+},
+{
+	"filename": "WalkFront4.png",
+	"frame": {"x":2,"y":146,"w":40,"h":70},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":70},
+	"sourceSize": {"w":40,"h":70}
+},
+{
+	"filename": "WalkFront5.png",
+	"frame": {"x":44,"y":146,"w":40,"h":70},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":40,"h":70},
+	"sourceSize": {"w":40,"h":70}
+},
+{
+	"filename": "WalkLeft0.png",
+	"frame": {"x":86,"y":146,"w":44,"h":68},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":44,"h":68},
+	"sourceSize": {"w":44,"h":68}
+},
+{
+	"filename": "WalkLeft1.png",
+	"frame": {"x":132,"y":146,"w":44,"h":68},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":44,"h":68},
+	"sourceSize": {"w":44,"h":68}
+},
+{
+	"filename": "WalkLeft2.png",
+	"frame": {"x":178,"y":146,"w":44,"h":68},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":44,"h":68},
+	"sourceSize": {"w":44,"h":68}
+},
+{
+	"filename": "WalkLeft3.png",
+	"frame": {"x":2,"y":218,"w":44,"h":68},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":44,"h":68},
+	"sourceSize": {"w":44,"h":68}
+},
+{
+	"filename": "WalkLeft4.png",
+	"frame": {"x":48,"y":218,"w":44,"h":68},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":44,"h":68},
+	"sourceSize": {"w":44,"h":68}
+},
+{
+	"filename": "WalkLeft5.png",
+	"frame": {"x":94,"y":218,"w":44,"h":68},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":44,"h":68},
+	"sourceSize": {"w":44,"h":68}
+},
+{
+	"filename": "book.png",
+	"frame": {"x":140,"y":218,"w":30,"h":20},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":30,"h":20},
+	"sourceSize": {"w":30,"h":20}
+}]
+

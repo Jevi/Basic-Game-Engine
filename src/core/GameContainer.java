@@ -42,7 +42,6 @@ public abstract class GameContainer {
 
 	protected void destroy() {
 		game.destroy();
-		Display.destroy();
 
 		Log.println(LOW_DEBUG, toString() + " Destruction Complete");
 	}

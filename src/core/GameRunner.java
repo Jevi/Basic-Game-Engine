@@ -4,6 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 
@@ -17,11 +18,11 @@ public class GameRunner extends GameContainer {
 
 	@Override
 	protected void init() throws LWJGLException {
-		initGL();
+		initLibraries();
 		super.init();
 	}
 
-	private void initGL() throws LWJGLException {
+	private void initLibraries() throws LWJGLException {
 		if (gameContainerConfig.isFullScreen()) {
 			DisplayMode[] modes = Display.getAvailableDisplayModes();
 			for (DisplayMode displayMode : modes) {
@@ -39,19 +40,48 @@ public class GameRunner extends GameContainer {
 		Display.setFullscreen(gameContainerConfig.isFullScreen());
 		Display.setVSyncEnabled(gameContainerConfig.isVSyncEnabled());
 		Display.create();
+		AL.create();
 
+		glViewport(0, 0, gameContainerConfig.getWidth(), gameContainerConfig.getHeight());
+		glMatrixMode(GL_PROJECTION);
+		glLoadIdentity();
 		glOrtho(0, gameContainerConfig.getWidth(), 0, gameContainerConfig.getHeight(), 1, -1);
-		glClearColor(0.4f, 0.6f, 0.8f, 1);
+		glMatrixMode(GL_MODELVIEW);
+		// glClearColor(0.4f, 0.6f, 0.8f, 1);
+	}
+
+	@Override
+	protected void destroy() {
+		TextureManager.destroyAllTextures();
+		AudioManager.destroyAllAudio();
+		Display.destroy();
+		AL.destroy();
+
+		super.destroy();
 	}
 
 	public void start() throws LWJGLException {
 		init();
 		while (!isCloseRequested()) {
 			glClear(GL_COLOR_BUFFER_BIT);
+			checkDisplayResize();
 			checkInput();
 			update(getDelta());
 		}
 		destroy();
+	}
+
+	private void checkDisplayResize() {
+		if (Display.wasResized()) {
+			gameContainerConfig.setWidth(Display.getWidth());
+			gameContainerConfig.setHeight(Display.getHeight());
+
+			glViewport(0, 0, gameContainerConfig.getWidth(), gameContainerConfig.getHeight());
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glOrtho(0, gameContainerConfig.getWidth(), 0, gameContainerConfig.getHeight(), 1, -1);
+			glMatrixMode(GL_MODELVIEW);
+		}
 	}
 
 	public boolean isCloseRequested() {
