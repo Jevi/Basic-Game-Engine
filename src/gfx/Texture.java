@@ -22,7 +22,6 @@ public class Texture {
 	private int id;
 	private int textureUnit;
 
-	private ByteBuffer data;
 	private int width;
 	private int height;
 
@@ -40,8 +39,6 @@ public class Texture {
 
 	public void destroy() {
 		glDeleteTextures(id);
-		data = null;
-		path = null;
 	}
 
 	public void bind() {
@@ -60,7 +57,7 @@ public class Texture {
 			width = pngDecoder.getWidth();
 			height = pngDecoder.getHeight();
 
-			data = ByteBuffer.allocateDirect(4 * width * height);
+			ByteBuffer data = ByteBuffer.allocateDirect(4 * width * height);
 			pngDecoder.decode(data, width * 4, Format.RGBA);
 			data.flip();
 			inputStream.close();
@@ -110,51 +107,8 @@ public class Texture {
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((data == null) ? 0 : data.hashCode());
-		result = prime * result + height;
-		result = prime * result + id;
-		result = prime * result + (isLoaded ? 1231 : 1237);
-		result = prime * result + ((path == null) ? 0 : path.hashCode());
-		result = prime * result + textureUnit;
-		result = prime * result + width;
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Texture other = (Texture) obj;
-		if (data == null) {
-			if (other.data != null)
-				return false;
-		}
-		else if (!data.equals(other.data))
-			return false;
-		if (height != other.height)
-			return false;
-		if (id != other.id)
-			return false;
-		if (isLoaded != other.isLoaded)
-			return false;
-		if (path == null) {
-			if (other.path != null)
-				return false;
-		}
-		else if (!path.equals(other.path))
-			return false;
-		if (textureUnit != other.textureUnit)
-			return false;
-		if (width != other.width)
-			return false;
-		return true;
+	public String toString() {
+		return "Texture [path=" + path + ", id=" + id + ", textureUnit=" + textureUnit + ", width=" + width + ", height=" + height + ", isLoaded=" + isLoaded + "]";
 	}
 
 }

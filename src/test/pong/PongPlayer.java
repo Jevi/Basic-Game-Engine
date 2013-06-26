@@ -116,10 +116,14 @@ public class PongPlayer extends Entity {
 
 			private void render() {
 				glBegin(GL_QUADS);
+				// top left
 				glVertex2f(position.x - dimension.x, position.y + dimension.y);
-				glVertex2f(position.x + dimension.x, position.y + dimension.y);
-				glVertex2f(position.x + dimension.x, position.y - dimension.y);
+				// bottom left
 				glVertex2f(position.x - dimension.x, position.y - dimension.y);
+				// bottom right
+				glVertex2f(position.x + dimension.x, position.y - dimension.y);
+				// top right
+				glVertex2f(position.x + dimension.x, position.y + dimension.y);
 				glEnd();
 			}
 		});

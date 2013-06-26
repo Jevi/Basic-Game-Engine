@@ -22,17 +22,17 @@ public class FontTestState extends AppState {
 	}
 
 	@Override
-	public void init(AppContainer gameContainer, StateBasedApp game) {
+	public void init(AppContainer appContainer, StateBasedApp app) {
 
 		try {
 			bitmapFont = new BitmapFont(AppContext.textureManager.get("Consolas"), new Vector2f(32, 32));
-			bitmapFont.setPosition(new Vector2f(gameContainer.getWidth() / 3.5f, gameContainer.getHeight() - (gameContainer.getHeight() / 3)));
+			bitmapFont.setPosition(new Vector2f(appContainer.getWidth() / 3.5f, appContainer.getHeight() - (appContainer.getHeight() / 3)));
 			bitmapFont.setFontSize(15);
 		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
-		super.init(gameContainer, game);
+		super.init(appContainer, app);
 	}
 
 	@Override

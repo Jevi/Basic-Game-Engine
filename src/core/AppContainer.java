@@ -6,7 +6,6 @@ import junit.framework.Assert;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.Sys;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.Color;
@@ -16,7 +15,7 @@ import util.Log;
 
 public abstract class AppContainer {
 
-	private App game;
+	protected App app;
 	protected DisplayMode initialDisplayMode;
 	protected DisplayMode previousDisplayMode;
 
@@ -36,25 +35,25 @@ public abstract class AppContainer {
 
 	private final int SECOND = 1000;
 
-	public AppContainer(App game, AppContainerConfig gameContainerConfig) {
-		Assert.assertNotNull(game);
-		this.game = game;
+	public AppContainer(App app, AppContainerConfig appContainerConfig) {
+		Assert.assertNotNull(app);
+		Assert.assertNotNull(appContainerConfig);
+		this.app = app;
 
-		width = gameContainerConfig.getWidth();
-		height = gameContainerConfig.getHeight();
-		sync = gameContainerConfig.getSync();
-		isVSyncEnabled = gameContainerConfig.isVSyncEnabled();
-		isResizable = gameContainerConfig.isResizable();
-		isFullScreen = gameContainerConfig.isFullScreen();
-		lwjglLibraryPath = gameContainerConfig.getLwjglLibraryPath();
-		backgroundColor = gameContainerConfig.getBackgroundColor();
+		width = appContainerConfig.getWidth();
+		height = appContainerConfig.getHeight();
+		sync = appContainerConfig.getSync();
+		isVSyncEnabled = appContainerConfig.isVSyncEnabled();
+		isResizable = appContainerConfig.isResizable();
+		isFullScreen = appContainerConfig.isFullScreen();
+		lwjglLibraryPath = appContainerConfig.getLwjglLibraryPath();
+		backgroundColor = appContainerConfig.getBackgroundColor();
 
-		Log.println(LOW_DEBUG, game.toString());
-		Log.println(LOW_DEBUG, gameContainerConfig.toString());
+		Log.println(LOW_DEBUG, app.toString());
 	}
 
 	protected void init() throws LWJGLException {
-		game.init(this);
+		app.init(this);
 		initialDisplayMode = Display.getDisplayMode();
 		previousDisplayMode = Display.getDisplayMode();
 
@@ -62,13 +61,13 @@ public abstract class AppContainer {
 	}
 
 	protected void destroy() {
-		game.destroy();
+		app.destroy();
 
 		Log.println(LOW_DEBUG, toString() + " Destruction Complete");
 	}
 
 	protected void update(int delta) {
-		game.update(delta);
+		app.update(delta);
 		Display.sync(sync);
 		Display.update();
 		resize();
@@ -85,14 +84,13 @@ public abstract class AppContainer {
 			glLoadIdentity();
 			glOrtho(0, width, 0, height, 1, -1);
 			glMatrixMode(GL_MODELVIEW);
+			glLoadIdentity();
+
+			AppContext.camera.translate(AppContext.camera.getX(), AppContext.camera.getY());
 		}
 	}
 
-	protected void input() {
-		while (Keyboard.next()) {
-			game.input();
-		}
-	}
+	protected abstract void input();
 
 	public long getTime() {
 		return (Sys.getTime() * SECOND) / Sys.getTimerResolution();
@@ -100,7 +98,7 @@ public abstract class AppContainer {
 
 	protected void updateFPS() {
 		if (getTime() - lastFPS > SECOND) {
-			Display.setTitle(game.getTitle() + " - " + recordedFPS);
+			Display.setTitle(app.getTitle() + " - " + recordedFPS);
 			lastFPS = getTime();
 			recordedFPS = fps;
 			fps = 0;
@@ -215,8 +213,9 @@ public abstract class AppContainer {
 
 	@Override
 	public String toString() {
-		return "AppContainer [game=" + game + ", width=" + width + ", height=" + height + ", sync=" + sync + ", isVSyncEnabled=" + isVSyncEnabled + ", isResizable=" + isResizable + ", isFullScreen=" + isFullScreen + ", lwjglLibraryPath="
-				+ lwjglLibraryPath + ", backgroundColor=" + backgroundColor + "]";
+		return "AppContainer [app=" + app + ", initialDisplayMode=" + initialDisplayMode + ", previousDisplayMode=" + previousDisplayMode + ", width=" + width + ", height=" + height + ", sync="
+				+ sync + ", isVSyncEnabled=" + isVSyncEnabled + ", isResizable=" + isResizable + ", isFullScreen=" + isFullScreen + ", lwjglLibraryPath=" + lwjglLibraryPath + ", backgroundColor="
+				+ backgroundColor + "]";
 	}
 
 }

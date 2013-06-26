@@ -19,11 +19,12 @@ public class PongEndState extends AppState {
 	}
 
 	@Override
-	public void init(AppContainer gameContainer, StateBasedApp game) {
-		troll = new Sprite(AppContext.textureManager.get("TrollFace"), new Vector2f(gameContainer.getWidth() / 2, gameContainer.getHeight() / 2), new Vector2f(gameContainer.getWidth() / 2, gameContainer.getHeight() / 2));
+	public void init(AppContainer appContainer, StateBasedApp app) {
+		troll = new Sprite(AppContext.textureManager.get("TrollFace"), new Vector2f(appContainer.getWidth() / 2, appContainer.getHeight() / 2), new Vector2f(appContainer.getWidth() / 2,
+				appContainer.getHeight() / 2));
 		AppContext.audioManager.get("Trololol").play();
 
-		super.init(gameContainer, game);
+		super.init(appContainer, app);
 	}
 
 	@Override
@@ -31,7 +32,7 @@ public class PongEndState extends AppState {
 		super.update(delta);
 
 		if (AppContext.audioManager.get("Trololol").isStopped()) {
-			game.enterPreviousGameState();
+			app.enterPreviousState();
 		}
 	}
 

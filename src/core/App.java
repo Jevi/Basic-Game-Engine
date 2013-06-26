@@ -3,22 +3,22 @@ package core;
 public abstract class App {
 
 	private String title;
-	protected AppContainer gameContainer;
-	protected AppState gameState;
+	protected AppContainer appContainer;
+	protected AppState appState;
 
 	public App(String title) {
 		this.title = title;
 	}
 
 	public void init(AppContainer gameContainer) {
-		this.gameContainer = gameContainer;
+		this.appContainer = gameContainer;
 	}
 
 	public abstract void destroy();
 
 	public void update(int delta) {
-		gameState.update(delta);
-		gameState.render();
+		appState.update(delta);
+		appState.render();
 	}
 
 	public abstract void input();
@@ -29,7 +29,7 @@ public abstract class App {
 
 	@Override
 	public String toString() {
-		return "Game [title=" + title + ", gameState=" + gameState + "]";
+		return "App [title=" + title + "]";
 	}
 
 }

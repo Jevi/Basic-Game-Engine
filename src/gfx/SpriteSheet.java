@@ -1,10 +1,7 @@
 package gfx;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL15.*;
-
-import java.io.IOException;
 
 import org.lwjgl.util.vector.Vector2f;
 
@@ -30,16 +27,7 @@ public class SpriteSheet {
 
 	private Vector2f frameDimensions; // gl
 
-	public SpriteSheet(String path, Vector2f spriteDimensions, Vector2f position, Vector2f dimension) throws IOException {
-		this.spriteDimension = new Vector2f(spriteDimensions);
-		this.position = new Vector2f(position);
-		this.dimension = new Vector2f(dimension);
-
-		texture = new Texture(path, GL_TEXTURE0);
-		texture.load();
-
-		init();
-	}
+	private float angle = 0;
 
 	public SpriteSheet(Texture texture, Vector2f spriteDimensions, Vector2f position, Vector2f dimension) {
 		this.texture = texture;
@@ -62,12 +50,16 @@ public class SpriteSheet {
 			vertices[i] = new Vertex();
 		}
 
+		// left top
 		vertices[0].setXY(position.x - dimension.x, position.y + dimension.y);
 		vertices[0].setST(low.x, low.y);
+		// left bottom
 		vertices[1].setXY(position.x - dimension.x, position.y - dimension.y);
 		vertices[1].setST(low.x, high.y);
+		// right bottom
 		vertices[2].setXY(position.x + dimension.x, position.y - dimension.y);
 		vertices[2].setST(high.x, high.y);
+		// right top
 		vertices[3].setXY(position.x + dimension.x, position.y + dimension.y);
 		vertices[3].setST(high.x, low.y);
 
@@ -93,7 +85,6 @@ public class SpriteSheet {
 
 	public void destroy() {
 		vbo.destroy();
-		texture.destroy();
 	}
 
 	public void render() {
@@ -102,6 +93,10 @@ public class SpriteSheet {
 
 	public String getPath() {
 		return texture.getPath();
+	}
+
+	public VBO getVBO() {
+		return vbo;
 	}
 
 	public Texture getTexture() {
@@ -141,5 +136,13 @@ public class SpriteSheet {
 
 	public Vector2f getFrameCount() {
 		return frameCount;
+	}
+
+	public void setAngle(float angle) {
+		this.angle = angle;
+	}
+
+	public float getAngle() {
+		return angle;
 	}
 }

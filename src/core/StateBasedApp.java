@@ -11,13 +11,13 @@ import junit.framework.Assert;
 
 public abstract class StateBasedApp extends App {
 
-	protected Map<Integer, AppState> idToGameStateMap = new HashMap<Integer, AppState>();
+	protected Map<Integer, AppState> idToStateMap = new HashMap<Integer, AppState>();
 	public static final int reservedId = 1337;
 
 	public StateBasedApp(String title) {
 		super(title);
 
-		gameState = new AppState(reservedId) {
+		appState = new AppState(reservedId) {
 			@Override
 			public void render() {
 			}
@@ -29,18 +29,21 @@ public abstract class StateBasedApp extends App {
 	}
 
 	@Override
-	public void init(AppContainer gameContainer) {
-		this.gameContainer = gameContainer;
-		initGameStates();
+	public void init(AppContainer appContainer) {
+		this.appContainer = appContainer;
+		initResources();
+		initStates();
 
 		Log.println(LOW_DEBUG, toString() + " Initialization Complete");
 	}
 
-	public abstract void initGameStates();
+	public abstract void initResources();
+
+	public abstract void initStates();
 
 	@Override
 	public void destroy() {
-		for (Entry<Integer, AppState> idToGameEntry : idToGameStateMap.entrySet()) {
+		for (Entry<Integer, AppState> idToGameEntry : idToStateMap.entrySet()) {
 			idToGameEntry.getValue().destroy();
 		}
 
@@ -49,75 +52,75 @@ public abstract class StateBasedApp extends App {
 
 	@Override
 	public void update(int delta) {
-		gameState.update(delta);
-		gameState.render();
+		appState.update(delta);
+		appState.render();
 	}
 
 	@Override
 	public void input() {
-		gameState.input();
+		appState.input();
 	}
 
 	public int getCurrentStateID() {
-		return gameState.getID();
+		return appState.getID();
 	}
 
-	public void addGameState(AppState gameState) {
-		Assert.assertNotNull(gameState);
+	public void addState(AppState appState) {
+		Assert.assertNotNull(appState);
 
-		idToGameStateMap.put(new Integer(gameState.getID()), gameState);
-		if (this.gameState.getID() == reservedId && gameState.getID() != reservedId) {
-			this.gameState = gameState;
-			this.gameState.init(gameContainer, this);
+		idToStateMap.put(new Integer(appState.getID()), appState);
+		if (this.appState.getID() == reservedId && appState.getID() != reservedId) {
+			this.appState = appState;
+			this.appState.init(appContainer, this);
 		}
-		Log.println(LOW_DEBUG, gameState.toString() + " added successfully");
+		Log.println(LOW_DEBUG, appState.toString() + " added successfully");
 	}
 
-	public boolean removeGameState(int id) {
-		AppState gameState = idToGameStateMap.get(new Integer(id));
+	public boolean removeState(int id) {
+		AppState appState = idToStateMap.get(new Integer(id));
 
-		if (id != gameState.getID() && gameState != null) {
-			idToGameStateMap.remove(gameState);
-			Log.println(LOW_DEBUG, gameState.toString() + " removed successfully");
+		if (id != appState.getID() && appState != null) {
+			idToStateMap.remove(appState);
+			Log.println(LOW_DEBUG, appState.toString() + " removed successfully");
 			return true;
 		}
 
-		Log.println(LOW_DEBUG, gameState.toString() + " could not be removed");
+		Log.println(LOW_DEBUG, appState.toString() + " could not be removed");
 		return false;
 	}
 
-	public boolean enterGameState(int id) {
-		if (idToGameStateMap.containsKey(new Integer(id)) && id != gameState.getID()) {
-			switchGameState(id);
-			return true;
-		}
-		return false;
-	}
-
-	public boolean enterNextGameState() {
-		int nextState = gameState.getID() + 1;
-		if (idToGameStateMap.containsKey(new Integer(nextState))) {
-			switchGameState(nextState);
+	public boolean enterState(int id) {
+		if (idToStateMap.containsKey(new Integer(id)) && id != appState.getID()) {
+			switchState(id);
 			return true;
 		}
 		return false;
 	}
 
-	public boolean enterPreviousGameState() {
-		int nextState = gameState.getID() - 1;
-		if (idToGameStateMap.containsKey(new Integer(nextState))) {
-			switchGameState(nextState);
+	public boolean enterNextState() {
+		int nextState = appState.getID() + 1;
+		if (idToStateMap.containsKey(new Integer(nextState))) {
+			switchState(nextState);
 			return true;
 		}
 		return false;
 	}
 
-	private void switchGameState(int id) {
-		gameState.destroy();
-		gameState = idToGameStateMap.get(id);
-		gameState.init(gameContainer, this);
+	public boolean enterPreviousState() {
+		int nextState = appState.getID() - 1;
+		if (idToStateMap.containsKey(new Integer(nextState))) {
+			switchState(nextState);
+			return true;
+		}
+		return false;
+	}
 
-		Log.println(LOW_DEBUG, gameState.toString() + " was switched to successfully");
+	private void switchState(int id) {
+		appState.destroy();
+		appState = idToStateMap.get(id);
+		appState.init(appContainer, this);
+
+		Log.println(LOW_DEBUG, appState.toString() + " was switched to successfully");
 	}
 
 }

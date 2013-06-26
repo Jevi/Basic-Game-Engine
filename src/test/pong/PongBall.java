@@ -46,7 +46,8 @@ public class PongBall extends Entity {
 				if (gameState instanceof PhysicsAppState) {
 					PhysicsAppState state = (PhysicsAppState) gameState;
 					pixelToMeterRatio = state.getPixelToMeterRatio();
-					startingPosition = new Vec2(Conversion.PixelsToMeters(gameContainer.getWidth(), pixelToMeterRatio) / 2.0f, Conversion.PixelsToMeters(gameContainer.getHeight(), pixelToMeterRatio) / 2.0f);
+					startingPosition = new Vec2(Conversion.PixelsToMeters(gameContainer.getWidth(), pixelToMeterRatio) / 2.0f,
+							Conversion.PixelsToMeters(gameContainer.getHeight(), pixelToMeterRatio) / 2.0f);
 
 					BodyDef bodyDef = new BodyDef();
 					bodyDef.position.set(startingPosition);
@@ -104,10 +105,14 @@ public class PongBall extends Entity {
 
 			private void render() {
 				glBegin(GL_QUADS);
+				// top left
 				glVertex2f(position.x - radius, position.y + radius);
-				glVertex2f(position.x + radius, position.y + radius);
-				glVertex2f(position.x + radius, position.y - radius);
+				// bottom left
 				glVertex2f(position.x - radius, position.y - radius);
+				// bottom right
+				glVertex2f(position.x + radius, position.y - radius);
+				// top right
+				glVertex2f(position.x + radius, position.y + radius);
 				glEnd();
 			}
 		});

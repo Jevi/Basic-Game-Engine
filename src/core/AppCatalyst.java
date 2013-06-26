@@ -5,6 +5,7 @@ import static org.lwjgl.opengl.GL11.*;
 import java.io.File;
 
 import org.lwjgl.LWJGLException;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
@@ -51,8 +52,12 @@ public class AppCatalyst extends AppContainer {
 		glLoadIdentity();
 		glOrtho(0, width, 0, height, 1, -1);
 		glMatrixMode(GL_MODELVIEW);
+		glLoadIdentity();
 
 		glClearColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), backgroundColor.getAlpha());
+
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
 	}
 
 	public void stop() {
@@ -69,10 +74,22 @@ public class AppCatalyst extends AppContainer {
 		super.destroy();
 	}
 
+	@Override
+	protected void input() {
+		while (Keyboard.next()) {
+			if (!Keyboard.getEventKeyState()) {
+				if (Keyboard.getEventKey() == Keyboard.KEY_ESCAPE) {
+					isCloseRequested = true;
+				}
+			}
+			app.input();
+		}
+	}
+
 	public void start() throws LWJGLException {
 		init();
 		while (!isCloseRequested()) {
-			glClear(GL_COLOR_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			input();
 			update(getDelta());
 		}

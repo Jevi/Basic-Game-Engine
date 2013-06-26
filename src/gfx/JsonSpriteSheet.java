@@ -1,7 +1,6 @@
 package gfx;
 
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL13.*;
 import static org.lwjgl.opengl.GL15.*;
 
 import java.io.File;
@@ -10,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.io.FilenameUtils;
 import org.lwjgl.util.vector.Vector2f;
@@ -34,20 +34,20 @@ public class JsonSpriteSheet {
 
 	private String currentFrame;
 
-	public JsonSpriteSheet(String config, String texture, Vector2f position, Vector2f dimension) throws IOException {
+	public JsonSpriteSheet(String config, Texture texture, Vector2f position, Vector2f dimension) throws IOException {
 		this.config = config;
-		this.texture = new Texture(texture, GL_TEXTURE0);
+		this.texture = texture;
 		this.position = new Vector2f(position);
 		this.dimension = new Vector2f(dimension);
-
-		this.texture.load();
 
 		JsonReader jsonReader = new JsonReader(new InputStreamReader(new FileInputStream(this.config)));
 		JsonParser jsonParser = new JsonParser();
 		JsonArray jsonArray = jsonParser.parse(jsonReader).getAsJsonArray();
 
+		Gson gson = new Gson();
+
 		for (JsonElement jsonElement : jsonArray) {
-			JsonSprite sprite = new Gson().fromJson(jsonElement, JsonSprite.class);
+			JsonSprite sprite = gson.fromJson(jsonElement, JsonSprite.class);
 
 			String spriteId = FilenameUtils.removeExtension(new File(sprite.getFilename()).getName());
 			idToSpriteMap.put(spriteId, sprite);
@@ -62,7 +62,6 @@ public class JsonSpriteSheet {
 
 	public void destroy() {
 		vbo.destroy();
-		texture.destroy();
 	}
 
 	private void initData() {
@@ -141,5 +140,9 @@ public class JsonSpriteSheet {
 	public void setFrame(String frame) {
 		currentFrame = frame;
 		updateData();
+	}
+
+	public Set<String> getFrames() {
+		return idToSpriteMap.keySet();
 	}
 }

@@ -13,8 +13,8 @@ import junit.framework.Assert;
 public abstract class AppState {
 
 	private int id;
-	protected AppContainer gameContainer;
-	protected StateBasedApp game;
+	protected AppContainer appContainer;
+	protected StateBasedApp app;
 	protected Map<String, Entity> idToEntityMap = new HashMap<String, Entity>();
 
 	public AppState(int id) {
@@ -25,11 +25,11 @@ public abstract class AppState {
 		Assert.assertNotNull(gameContainer);
 		Assert.assertNotNull(game);
 
-		this.gameContainer = gameContainer;
-		this.game = game;
+		this.appContainer = gameContainer;
+		this.app = game;
 
 		for (Entity entity : idToEntityMap.values()) {
-			entity.init(this.gameContainer, this);
+			entity.init(this.appContainer, this);
 		}
 
 		Log.println(LOW_DEBUG, toString() + " Initialization Complete");

@@ -8,7 +8,7 @@ import core.AppState;
 public abstract class PhysicsAppState extends AppState {
 
 	protected World world;
-	protected float pixelToMeterRatio;
+	private float pixelToMeterRatio;
 	private int worldStep = 0;
 
 	public PhysicsAppState(int id, Vec2 gravity, int pixelToMeterRatio) {

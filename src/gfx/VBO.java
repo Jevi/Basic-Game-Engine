@@ -23,6 +23,8 @@ public class VBO {
 	private int mode;
 	private int usage;
 
+	private float angle = 0;
+
 	public VBO(Vertex[] vertices, int mode, int usage) {
 		this.vertices = Arrays.copyOf(vertices, vertices.length);
 		this.mode = mode;
@@ -103,6 +105,14 @@ public class VBO {
 
 	public int getUsage() {
 		return usage;
+	}
+
+	public void setAngle(float angle) {
+		this.angle = angle;
+	}
+
+	public float getAngle() {
+		return angle;
 	}
 
 }

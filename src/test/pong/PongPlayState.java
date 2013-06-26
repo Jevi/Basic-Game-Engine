@@ -31,18 +31,19 @@ public class PongPlayState extends PhysicsAppState {
 	}
 
 	@Override
-	public void init(AppContainer gameContainer, StateBasedApp game) {
-		addEntity(new PongWall("TopWall", new Vec2(gameContainer.getWidth() / 2, 1), new Vec2(gameContainer.getWidth() / 2, gameContainer.getHeight() + 1)));
-		addEntity(new PongWall("BottomWall", new Vec2(gameContainer.getWidth() / 2, 1), new Vec2(gameContainer.getWidth() / 2, 0 - 1)));
+	public void init(AppContainer appContainer, StateBasedApp app) {
+		addEntity(new PongWall("TopWall", new Vec2(appContainer.getWidth() / 2, 1), new Vec2(appContainer.getWidth() / 2, appContainer.getHeight() + 1)));
+		addEntity(new PongWall("BottomWall", new Vec2(appContainer.getWidth() / 2, 1), new Vec2(appContainer.getWidth() / 2, 0 - 1)));
 
-		addEntity(new PongPlayer("Player1", new Vec2(2, 50), new Vec2(gameContainer.getWidth() / 35, gameContainer.getHeight() / 2), new int[] { Keyboard.KEY_Z, Keyboard.KEY_X }));
-		addEntity(new PongPlayer("Player2", new Vec2(2, 50), new Vec2(gameContainer.getWidth() - (gameContainer.getWidth() / 35), gameContainer.getHeight() / 2), new int[] { Keyboard.KEY_UP, Keyboard.KEY_DOWN }));
+		addEntity(new PongPlayer("Player1", new Vec2(2, 50), new Vec2(appContainer.getWidth() / 35, appContainer.getHeight() / 2), new int[] { Keyboard.KEY_Z, Keyboard.KEY_X }));
+		addEntity(new PongPlayer("Player2", new Vec2(2, 50), new Vec2(appContainer.getWidth() - (appContainer.getWidth() / 35), appContainer.getHeight() / 2), new int[] { Keyboard.KEY_UP,
+				Keyboard.KEY_DOWN }));
 
 		addEntity(new PongBall("PongBall"));
 
 		try {
 			scoreBoard = new BitmapFont(AppContext.textureManager.get("Consolas"), new Vector2f(32, 32));
-			scoreBoard.setPosition(new Vector2f(gameContainer.getWidth() / 3, gameContainer.getHeight() - (gameContainer.getHeight() / 25)));
+			scoreBoard.setPosition(new Vector2f(appContainer.getWidth() / 3, appContainer.getHeight() - (appContainer.getHeight() / 25)));
 			scoreBoard.setFontSize(14);
 		}
 		catch (IOException e) {
@@ -51,7 +52,7 @@ public class PongPlayState extends PhysicsAppState {
 
 		world.setContactListener(new PongWorldContactListener());
 
-		super.init(gameContainer, game);
+		super.init(appContainer, app);
 	}
 
 	@Override
@@ -68,9 +69,9 @@ public class PongPlayState extends PhysicsAppState {
 	private void checkScore() {
 		PongBall pongBall = (PongBall) getEntity("PongBall");
 
-		Vec2 position = Conversion.MetersToPixels(pongBall.getBody().getPosition(), pixelToMeterRatio);
+		Vec2 position = Conversion.MetersToPixels(pongBall.getBody().getPosition(), getPixelToMeterRatio());
 
-		if (position.x >= gameContainer.getWidth()) {
+		if (position.x >= appContainer.getWidth()) {
 			playerOneScore++;
 			playerOneScoredLast = true;
 			reset();
@@ -96,7 +97,7 @@ public class PongPlayState extends PhysicsAppState {
 		if (playerOneScore == scoreLimit || playerTwoScore == scoreLimit) {
 			playerOneScore = 0;
 			playerTwoScore = 0;
-			game.enterNextGameState();
+			app.enterNextState();
 		}
 		else {
 			serve();
@@ -106,8 +107,8 @@ public class PongPlayState extends PhysicsAppState {
 	@Override
 	public void render() {
 		glBegin(GL_LINES);
-		glVertex2f(gameContainer.getWidth() / 2.0f, gameContainer.getHeight());
-		glVertex2f(gameContainer.getWidth() / 2.0f, 0);
+		glVertex2f(appContainer.getWidth() / 2.0f, appContainer.getHeight());
+		glVertex2f(appContainer.getWidth() / 2.0f, 0);
 		glEnd();
 
 		scoreBoard.renderText(String.format("Player 1: %s\t\tPlayer 2: %s", Integer.toString(playerOneScore), Integer.toString(playerTwoScore)));

@@ -6,7 +6,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
 import core.AppCatalyst;
-import core.AppContainer;
 import core.AppContainerConfig;
 import core.AppContext;
 import core.StateBasedApp;
@@ -20,24 +19,21 @@ public class PongGame extends StateBasedApp {
 	}
 
 	@Override
-	public void initGameStates() {
-		addGameState(new PongStartState(0));
-		addGameState(new PongPlayState(1, new Vec2(), 30));
-		addGameState(new PongEndState(2));
-		enterGameState(0);
-	}
-
-	@Override
-	public void init(AppContainer gameContainer) {
-
+	public void initResources() {
 		AppContext.textureManager.register("res/fonts/Consolas.png");
 		AppContext.textureManager.register("res/img/PongGame/TrollFace.png");
 
 		AppContext.audioManager.register("res/audio/PongGame/BallCollision.wav");
 		AppContext.audioManager.register("res/audio/PongGame/Score.wav");
 		AppContext.audioManager.register("res/audio/PongGame/Trololol.wav");
+	}
 
-		super.init(gameContainer);
+	@Override
+	public void initStates() {
+		addState(new PongStartState(0));
+		addState(new PongPlayState(1, new Vec2(), 30));
+		addState(new PongEndState(2));
+		enterState(0);
 	}
 
 	@Override
@@ -51,10 +47,10 @@ public class PongGame extends StateBasedApp {
 				break;
 			case Keyboard.KEY_F11:
 				if (Display.isFullscreen()) {
-					appCatalyst.setDisplayMode(gameContainer.getWidth(), gameContainer.getHeight(), false);
+					appCatalyst.setDisplayMode(appContainer.getWidth(), appContainer.getHeight(), false);
 				}
 				else {
-					appCatalyst.setDisplayMode(gameContainer.getWidth(), gameContainer.getHeight(), true);
+					appCatalyst.setDisplayMode(appContainer.getWidth(), appContainer.getHeight(), true);
 				}
 				break;
 			}
@@ -63,11 +59,11 @@ public class PongGame extends StateBasedApp {
 
 	public static void main(String[] args) throws LWJGLException {
 
-		AppContainerConfig gameContainerConfig = new AppContainerConfig();
-		gameContainerConfig.setWidth(1280);
-		gameContainerConfig.setHeight(720);
+		AppContainerConfig appContainerConfig = new AppContainerConfig();
+		appContainerConfig.setWidth(1280);
+		appContainerConfig.setHeight(720);
 
-		appCatalyst = new AppCatalyst(new PongGame("Pong Game"), gameContainerConfig);
+		appCatalyst = new AppCatalyst(new PongGame("Pong Game"), appContainerConfig);
 		appCatalyst.start();
 	}
 

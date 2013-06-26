@@ -21,17 +21,17 @@ public class PongStartState extends AppState {
 	}
 
 	@Override
-	public void init(AppContainer gameContainer, StateBasedApp game) {
+	public void init(AppContainer appContainer, StateBasedApp app) {
 
 		try {
 			rules = new BitmapFont(AppContext.textureManager.get("Consolas"), new Vector2f(32, 32));
-			rules.setPosition(new Vector2f(gameContainer.getWidth() / 3.5f, gameContainer.getHeight() - (gameContainer.getHeight() / 3)));
+			rules.setPosition(new Vector2f(appContainer.getWidth() / 3.5f, appContainer.getHeight() - (appContainer.getHeight() / 3)));
 			rules.setFontSize(15);
 		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
-		super.init(gameContainer, game);
+		super.init(appContainer, app);
 	}
 
 	@Override
@@ -48,7 +48,7 @@ public class PongStartState extends AppState {
 	public void input() {
 		if (!Keyboard.getEventKeyState()) {
 			if (Keyboard.getEventKey() == Keyboard.KEY_P) {
-				game.enterNextGameState();
+				app.enterNextState();
 			}
 		}
 	}

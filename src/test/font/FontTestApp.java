@@ -5,7 +5,6 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 
 import core.AppCatalyst;
-import core.AppContainer;
 import core.AppContainerConfig;
 import core.AppContext;
 import core.StateBasedApp;
@@ -19,15 +18,13 @@ public class FontTestApp extends StateBasedApp {
 	}
 
 	@Override
-	public void init(AppContainer gameContainer) {
+	public void initResources() {
 		AppContext.textureManager.register("res/fonts/Consolas.png");
-
-		super.init(gameContainer);
 	}
 
 	@Override
-	public void initGameStates() {
-		addGameState(new FontTestState(0));
+	public void initStates() {
+		addState(new FontTestState(0));
 	}
 
 	@Override
@@ -41,10 +38,10 @@ public class FontTestApp extends StateBasedApp {
 				break;
 			case Keyboard.KEY_F11:
 				if (Display.isFullscreen()) {
-					appCatalyst.setDisplayMode(gameContainer.getWidth(), gameContainer.getHeight(), false);
+					appCatalyst.setDisplayMode(appContainer.getWidth(), appContainer.getHeight(), false);
 				}
 				else {
-					appCatalyst.setDisplayMode(gameContainer.getWidth(), gameContainer.getHeight(), true);
+					appCatalyst.setDisplayMode(appContainer.getWidth(), appContainer.getHeight(), true);
 				}
 				break;
 			}
