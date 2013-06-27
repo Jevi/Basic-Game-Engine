@@ -4,7 +4,7 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.lwjgl.util.vector.Vector2f;
@@ -16,11 +16,15 @@ import com.google.gson.JsonSyntaxException;
 
 public class JsonTiledMap {
 
+	public static final String TILED_MAP_ROTATION_90 = "2684354560";
+	public static final String TILED_MAP_ROTATION_180 = "3221225472";
+	public static final String TILED_MAP_ROTATION_270 = "1610612736";
+
 	private String config;
 	private Texture texture;
 	private Vector2f position;
 
-	private Set<SpriteSheet> spriteSheets = new HashSet<SpriteSheet>();
+	private SpriteSheet[] spriteSheets;
 
 	private JsonTiledMapLayer[] layers;
 	private int width, height; // in tiles
@@ -43,42 +47,55 @@ public class JsonTiledMap {
 	}
 
 	private void initData() {
+
+		Set<SpriteSheet> spriteSheetSet = new LinkedHashSet<SpriteSheet>();
+
 		for (JsonTiledMapLayer layer : layers) {
-			int xoffset = 0;
-			int yoffset = 0;
+			JsonTiledMapLayerType type = layer.getType();
 
-			for (long data : layer.getData()) {
-				data--;
-				if (xoffset == width) {
-					xoffset = 0;
-					yoffset++;
+			switch (type) {
+			case TILELAYER:
+				int xoffset = 0;
+				int yoffset = 0;
+				for (long data : layer.getData()) {
+					data--;
+					if (xoffset == width) {
+						xoffset = 0;
+						yoffset++;
+					}
+
+					float angle = 0;
+					long frame = data;
+
+					if (data > 0) {
+						if (Long.toString(data).startsWith(TILED_MAP_ROTATION_90.substring(0, 4))) {
+							angle = -90f;
+							frame = frame - Long.parseLong(TILED_MAP_ROTATION_90);
+						}
+						else if (Long.toString(data).startsWith(TILED_MAP_ROTATION_180.substring(0, 4))) {
+							angle = -180f;
+							frame = frame - Long.parseLong(TILED_MAP_ROTATION_180);
+						}
+						else if (Long.toString(data).startsWith(TILED_MAP_ROTATION_270.substring(0, 4))) {
+							angle = -270f;
+							frame = frame - Long.parseLong(TILED_MAP_ROTATION_270);
+						}
+
+						SpriteSheet spriteSheet = new SpriteSheet(texture, new Vector2f(tilewidth, tileheight), new Vector2f(position.x + (tilewidth * xoffset), position.y + (-tileheight * yoffset)),
+								new Vector2f(tilewidth / 2, tileheight / 2));
+						spriteSheet.setAngle(angle);
+						spriteSheet.setFrame((int) frame);
+						spriteSheetSet.add(spriteSheet);
+					}
+					xoffset++;
 				}
-
-				float angle = 0;
-				long frame = data;
-
-				if (data > 0) {
-					if (Long.toString(data).startsWith("26843")) {
-						angle = -90f;
-						frame = frame - 2684354560L;
-					}
-					else if (Long.toString(data).startsWith("32212")) {
-						angle = -180f;
-						frame = frame - 3221225472L;
-					}
-					else if (Long.toString(data).startsWith("16106")) {
-						angle = -270f;
-						frame = frame - 1610612736L;
-					}
-
-					SpriteSheet spriteSheet = new SpriteSheet(texture, new Vector2f(tilewidth, tileheight), new Vector2f(position.x + (tilewidth * xoffset), position.y + (-tileheight * yoffset)),
-							new Vector2f(tilewidth / 2, tileheight / 2));
-					spriteSheet.setAngle(angle);
-					spriteSheet.setFrame((int) frame);
-					spriteSheets.add(spriteSheet);
-				}
-				xoffset++;
+				spriteSheets = spriteSheetSet.toArray(new SpriteSheet[spriteSheetSet.size()]);
+				break;
+			case OBJECTGROUP:
+				System.out.println(layer);
+				break;
 			}
+
 		}
 	}
 
@@ -95,15 +112,17 @@ public class JsonTiledMap {
 
 		for (SpriteSheet spriteSheet : spriteSheets) {
 			VBO vbo = spriteSheet.getVBO();
-			Vector2f position = spriteSheet.getPosition();
+			float angle = spriteSheet.getAngle();
 
-			glPushMatrix();
-			{
-				vbo.bind();
+			vbo.bind();
+			if (angle != 0) {
+				glPushMatrix();
 
-				glTranslatef(position.x, position.y, 0.0f);
-				glRotatef(spriteSheet.getAngle(), 0.0f, 0.0f, 1.0f);
-				glTranslatef(-position.x, -position.y, 0.0f);
+				Vector2f position = spriteSheet.getPosition();
+
+				glTranslatef(position.x, position.y, 0);
+				glRotatef(angle, 0.0f, 0.0f, 1);
+				glTranslatef(-position.x, -position.y, 0);
 
 				glVertexPointer(Vertex.positionElementCount, GL_FLOAT, Vertex.stride, Vertex.positionByteOffset);
 				glColorPointer(Vertex.colorElementCount, GL_FLOAT, Vertex.stride, Vertex.colorByteOffset);
@@ -111,9 +130,16 @@ public class JsonTiledMap {
 
 				glDrawArrays(vbo.getMode(), 0, Vertex.elementCount);
 
-				vbo.unbind();
+				glPopMatrix();
 			}
-			glPopMatrix();
+			else {
+				glVertexPointer(Vertex.positionElementCount, GL_FLOAT, Vertex.stride, Vertex.positionByteOffset);
+				glColorPointer(Vertex.colorElementCount, GL_FLOAT, Vertex.stride, Vertex.colorByteOffset);
+				glTexCoordPointer(Vertex.textureElementCount, GL_FLOAT, Vertex.stride, Vertex.textureByteOffset);
+
+				glDrawArrays(vbo.getMode(), 0, Vertex.elementCount);
+			}
+			vbo.unbind();
 		}
 
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);

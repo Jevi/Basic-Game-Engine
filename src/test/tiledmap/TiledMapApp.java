@@ -2,6 +2,7 @@ package test.tiledmap;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.Display;
 
 import core.AppCatalyst;
 import core.AppContainerConfig;
@@ -43,11 +44,23 @@ public class TiledMapApp extends StateBasedApp {
 		super.update(delta);
 	}
 
+	@Override
+	public void input() {
+		if (!Keyboard.getEventKeyState()) {
+			if (Keyboard.getEventKey() == Keyboard.KEY_F11) {
+				if (!Display.isFullscreen()) {
+					appContainer.setDisplayMode(appContainer.getWidth(), appContainer.getHeight(), true);
+				}
+				else {
+					appContainer.setDisplayMode(appContainer.getWidth(), appContainer.getHeight(), false);
+				}
+			}
+		}
+		super.input();
+	}
+
 	public static void main(String[] args) throws LWJGLException {
 		AppContainerConfig appContainerConfig = new AppContainerConfig();
-		appContainerConfig.setWidth(1280);
-		appContainerConfig.setHeight(720);
-		appContainerConfig.setResizable(true);
 
 		AppCatalyst appCatalyst = new AppCatalyst(new TiledMapApp("TiledMapApp"), appContainerConfig);
 		appCatalyst.start();

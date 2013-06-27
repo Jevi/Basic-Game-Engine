@@ -8,7 +8,6 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.openal.AL;
 import org.lwjgl.opengl.Display;
-import org.lwjgl.opengl.DisplayMode;
 
 public class AppCatalyst extends AppContainer {
 
@@ -28,18 +27,7 @@ public class AppCatalyst extends AppContainer {
 
 		System.setProperty("org.lwjgl.librarypath", new File(lwjglLibraryPath).getAbsolutePath());
 
-		if (isFullScreen) {
-			DisplayMode[] modes = Display.getAvailableDisplayModes();
-			for (DisplayMode displayMode : modes) {
-				if (displayMode.getWidth() == width && displayMode.getHeight() == height && displayMode.isFullscreenCapable()) {
-					Display.setDisplayMode(displayMode);
-					break;
-				}
-			}
-		}
-		else {
-			Display.setDisplayMode(new DisplayMode(width, height));
-		}
+		setDisplayMode(width, height, isFullScreen);
 
 		Display.setResizable(isResizable);
 		Display.setFullscreen(isFullScreen);
@@ -47,17 +35,16 @@ public class AppCatalyst extends AppContainer {
 		Display.create();
 		AL.create();
 
-		glViewport(0, 0, width, height);
 		glMatrixMode(GL_PROJECTION);
 		glLoadIdentity();
-		glOrtho(0, width, 0, height, 1, -1);
+		glOrtho(0, width, 0, height, 2, -2);
 		glMatrixMode(GL_MODELVIEW);
-		glLoadIdentity();
 
 		glClearColor(backgroundColor.getRed(), backgroundColor.getGreen(), backgroundColor.getBlue(), backgroundColor.getAlpha());
 
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
+
 	}
 
 	public void stop() {

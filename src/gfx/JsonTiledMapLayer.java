@@ -5,8 +5,11 @@ import java.util.Arrays;
 public class JsonTiledMapLayer {
 
 	private long[] data;
+	private JsonTiledMapObject[] objects;
+
 	private int width, height;
 	private String name;
+	private String type;
 
 	private int x, y;
 
@@ -14,8 +17,16 @@ public class JsonTiledMapLayer {
 
 	}
 
+	public JsonTiledMapLayerType getType() {
+		return JsonTiledMapLayerType.valueOf(type.toUpperCase());
+	}
+
 	public long[] getData() {
 		return data;
+	}
+
+	public JsonTiledMapObject[] getObjects() {
+		return objects;
 	}
 
 	public int getWidth() {
@@ -40,7 +51,8 @@ public class JsonTiledMapLayer {
 
 	@Override
 	public String toString() {
-		return "JsonTiledMapLayer [data=" + Arrays.toString(data) + ", width=" + width + ", height=" + height + ", name=" + name + ", x=" + x + ", y=" + y + "]";
+		return "JsonTiledMapLayer [data=" + Arrays.toString(data) + ", objects=" + Arrays.toString(objects) + ", width=" + width + ", height=" + height + ", name=" + name + ", type=" + type + ", x="
+				+ x + ", y=" + y + "]";
 	}
 
 }

@@ -71,12 +71,16 @@ public class SpriteSheet {
 		low = new Vector2f((frame % (int) frameCount.x) * frameDimensions.x, (frame / (int) frameCount.y) * frameDimensions.y);
 		high = new Vector2f(low.x + frameDimensions.x, low.y + frameDimensions.y);
 
+		// left top
 		vertices[0].setXY(position.x - dimension.x, position.y + dimension.y);
 		vertices[0].setST(low.x, low.y);
+		// left bottom
 		vertices[1].setXY(position.x - dimension.x, position.y - dimension.y);
 		vertices[1].setST(low.x, high.y);
+		// right bottom
 		vertices[2].setXY(position.x + dimension.x, position.y - dimension.y);
 		vertices[2].setST(high.x, high.y);
+		// right top
 		vertices[3].setXY(position.x + dimension.x, position.y + dimension.y);
 		vertices[3].setST(high.x, low.y);
 
